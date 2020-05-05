@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 export default class Auth extends Component {
     constructor(props){
@@ -35,12 +36,13 @@ export default class Auth extends Component {
                             <h1 className="display-4 text-center">Log In</h1>
                             <form onSubmit={this.formSubmitHandler}>
                                 <div className="form-group">
-                                    <input type="email" className="form-control form-control-lg" onChange={this.formChangeHandler} value={this.state.email} placeholder="Email Address" name="email" />
+                                    <input type="email" required className="form-control form-control-lg" onChange={this.formChangeHandler} value={this.state.email} placeholder="Email Address" name="email" />
                                 </div>
                                 <div className="form-group">
-                                    <input type="password" className="form-control form-control-lg" onChange={this.formChangeHandler} value={this.state.password} placeholder="Password" name="password" />
+                                    <input type="password" required className="form-control form-control-lg" onChange={this.formChangeHandler} value={this.state.password} placeholder="Password" name="password" />
                                 </div>
                                 <input type="submit" value="Login" className="btn btn-danger btn-block mt-4" />
+                                <Link to="/register"><button type="button"  className="btn btn-outline-danger btn-block mt-4">Sign up</button></Link>
                             </form>
                         </div>
                     </div>
