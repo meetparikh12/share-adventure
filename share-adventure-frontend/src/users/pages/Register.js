@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 export default class Register extends Component {
+    
     constructor(props){
         super(props);
         this.state = {
@@ -12,13 +13,16 @@ export default class Register extends Component {
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.formSubmitHandler = this.formSubmitHandler.bind(this);
     }
-     formChangeHandler(event){
+
+    formChangeHandler(event){
         this.setState({
             [event.target.name]: event.target.value
         });
     }
+
     formSubmitHandler(event){
-        event.preventDefault();
+        event.preventDefault();  
+
         const newUser = {
             name: this.state.name,
             email: this.state.email,
@@ -27,7 +31,6 @@ export default class Register extends Component {
 
         console.log(newUser);
     }
-
 
     render() {
         return (
@@ -52,7 +55,7 @@ export default class Register extends Component {
                                 </div>
                                 <input type="submit" value="Sign up" class="btn btn-danger btn-block mt-4" />
                                 <Link to="/login"><button type="button"  className="btn btn-outline-danger btn-block mt-4">Login</button></Link>
-
+                             
                             </form>
                         </div>
                     </div>
