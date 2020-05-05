@@ -1,34 +1,64 @@
-import React, {useContext} from 'react'
+import React from 'react' ;
+//{useContext} from 'react'
 import { NavLink } from 'react-router-dom';
 import './NavLinks.css';
-import { AuthContext } from '../context/Auth-Context';
+//import { AuthContext } from '../context/Auth-Context';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { setIsUserLoggedIn } from '../../../actions/actions';
 
-const NavLinks = () => {
-    const auth = useContext(AuthContext);
-    return (
+class NavLinks extends React.Component {
+  //  const auth = useContext(AuthContext);
+
+    logout(){
+        this.props.setIsUserLoggedIn(!this.props.isUserLoggedIn);
+    }
+    
+    render(){
+        const { isUserLoggedIn } = this.props;
+        return (
         <ul className="nav-links">
-            { !auth.isLoggedIn &&
             <li>
                 <NavLink to="/" exact>ALL USERS</NavLink>
             </li>
-            }
-            { auth.isLoggedIn &&
+            { isUserLoggedIn &&
             <li>
                 <NavLink to="/u1/places">MY PLACES</NavLink>
             </li>
             }
-            { auth.isLoggedIn &&
+            { isUserLoggedIn &&
             <li>
-                <NavLink to="/place/new">NEW PLACE</NavLink>
+                 <NavLink to="/place/new">NEW PLACE</NavLink>
             </li>
             }
-            { !auth.isLoggedIn && <li>
+            { isUserLoggedIn &&
+            <li>
+                <NavLink to="/register" onClick={this.logout.bind(this)}>LOGOUT</NavLink>
+            </li>
+            }
+            { !isUserLoggedIn && <li>
                 <NavLink to="/login">AUTHENTICATE</NavLink>
             </li> }
 
         </ul>
-
-    )
+        )
+    }
 }
-export default NavLinks;
+NavLinks.propTypes = {
+    isUserLoggedIn : PropTypes.object.isRequired
+}
+const mapStateToProps = state => {
+    return {
+        isUserLoggedIn : state.user.isUserLoggedIn
+    }
+}
+
+const mapDispatchToProps = dispatchEvent => {
+    return {
+        setIsUserLoggedIn: (isUserLoggedIn) => {
+            dispatchEvent(setIsUserLoggedIn(isUserLoggedIn));
+           
+        }
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(NavLinks);

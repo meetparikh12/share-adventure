@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-
-export default class Auth extends Component {
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { setIsUserLoggedIn } from '../../actions/actions';
+class Auth extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -23,7 +25,7 @@ export default class Auth extends Component {
             email: this.state.email,
             password: this.state.password
         }
-
+        this.props.setIsUserLoggedIn(!this.props.isUserLoggedIn,this.props.history);
         console.log(loginUser);
     }
 
@@ -51,3 +53,23 @@ export default class Auth extends Component {
         )
     }
 }
+Auth.propTypes = {
+    isUserLoggedIn: PropTypes.object.isRequired
+}
+
+const mapStateToProps = state => {
+    return {
+        isUserLoggedIn : state.user.isUserLoggedIn
+    }
+}
+
+const mapDispatchToProps = dispatchEvent => {
+    return {
+        setIsUserLoggedIn : (isUserLoggedIn, history) => {
+            dispatchEvent(setIsUserLoggedIn(isUserLoggedIn));
+            history.push('/');
+        }
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Auth);
