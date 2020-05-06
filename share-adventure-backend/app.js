@@ -6,8 +6,8 @@ const userRoutes = require('./routes/users');
 
 app.use(bodyParser.json());
 
-app.use('/places', placesRoutes);
-app.use('/users', userRoutes);
+app.use('/api/places', placesRoutes);
+app.use('/api/users', userRoutes);
 
 app.listen(5000);
 console.log("Server is listening on port " +5000);
