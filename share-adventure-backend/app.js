@@ -9,5 +9,10 @@ app.use(bodyParser.json());
 app.use('/api/places', placesRoutes);
 app.use('/api/users', userRoutes);
 
+app.use((error,req,res,next)=> {
+    const message = error.message;
+    const status = error.statusCode;
+    res.status(status).json({message});
+})
 app.listen(5000);
 console.log("Server is listening on port " +5000);

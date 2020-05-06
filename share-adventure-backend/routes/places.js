@@ -1,5 +1,6 @@
 const express = require('express');
 const route  = express.Router();
+const ErrorHandling = require('../models/error-handling');
 
 const USER_PLACES = [{
     id: 'p1',
@@ -28,14 +29,28 @@ const USER_PLACES = [{
 route.get('/:placeId', (req,res,next)=> {
     const placeId = req.params.placeId;
     const place = USER_PLACES.find((place)=> place.id === placeId);
+    if(!place) {
+        // const error = new Error('Place not found');
+        // error.statusCode = 404;
+        // next(error);
+        throw new ErrorHandling('Place not found', 404);
+    }
     res.json({place});
+    
 });
 
 route.get('/user/:userId', (req,res,next) => {
     const userId = req.params.userId;
     const place = USER_PLACES.find((place)=> place.creator === userId);
-    res.json({place});
-
+    if (!place) {
+        // const error = new Error('User not found');
+        // error.statusCode = 404;
+        // next(error);
+        return next(new ErrorHandling('User not found', 404));
+    } 
+    res.json({
+        place
+    });
 });
 
 module.exports = route;
