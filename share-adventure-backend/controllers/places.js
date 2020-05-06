@@ -87,3 +87,17 @@ exports.UPDATE_PLACE = (req,res,next) => {
 
     res.status(200).json({place: updatedPlace});
 }
+
+exports.DELETE_PLACE = (req,res,next)=> {
+    const placeId = req.params.placeId;
+    const place = USER_PLACES.find((place)=> place.id === placeId);
+    if(!place) {
+        throw new ErrorHandling('Place not found', 404);
+    } 
+    const placeIndex = USER_PLACES.findIndex((place) => place.id === placeId);
+    //actually removes element from array
+    USER_PLACES.splice(placeIndex);
+    //can also use filter method on USER_PLACES array to get a set of array on condition, it does not change the original array
+
+    res.status(200).json({message: 'Place deleted'});
+}

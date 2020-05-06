@@ -9,4 +9,6 @@ route.post('/', placeController.CREATE_NEW_PLACE);
 
 route.patch('/:placeId', placeController.UPDATE_PLACE);
 
+route.delete('/:placeId', placeController.DELETE_PLACE);
+
 module.exports = route;
