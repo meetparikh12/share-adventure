@@ -69,3 +69,21 @@ exports.CREATE_NEW_PLACE = (req,res,next)=> {
     console.log(USER_PLACES);
     res.status(201).json({place: createPlace});
 }
+
+exports.UPDATE_PLACE = (req,res,next) => {
+    const placeId = req.params.placeId;
+    const place = USER_PLACES.find((place)=> place.id === placeId);
+    let updatedPlace;
+    if(!place) {
+        throw new ErrorHandling('Place not found', 404);
+    } else {
+         updatedPlace = {...place}
+    }
+    const {title, description} = req.body;
+    const placeIndex = USER_PLACES.findIndex((place) => place.id === placeId);
+    updatedPlace.title = title;
+    updatedPlace.description = description;
+    USER_PLACES[placeIndex] = updatedPlace;
+
+    res.status(200).json({place: updatedPlace});
+}

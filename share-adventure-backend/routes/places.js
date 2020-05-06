@@ -7,4 +7,6 @@ route.get('/user/:userId', placeController.GET_PLACES_BY_USERID );
 
 route.post('/', placeController.CREATE_NEW_PLACE);
 
+route.patch('/:placeId', placeController.UPDATE_PLACE);
+
 module.exports = route;
