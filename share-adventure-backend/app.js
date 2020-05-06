@@ -10,8 +10,8 @@ app.use('/api/places', placesRoutes);
 app.use('/api/users', userRoutes);
 
 app.use((error,req,res,next)=> {
-    const message = error.message;
-    const status = error.statusCode;
+    const message = error.message || 'Unknown Error Occured';
+    const status = error.statusCode || 500;
     res.status(status).json({message});
 })
 app.listen(5000);

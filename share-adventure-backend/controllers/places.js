@@ -1,4 +1,5 @@
 const ErrorHandling = require('../models/error-handling');
+const { v4: uuidv4 } = require('uuid');
 
 const USER_PLACES = [{
     id: 'p1',
@@ -41,7 +42,7 @@ exports.GET_PLACE_BY_ID = (req, res, next) => {
 
 exports.GET_PLACES_BY_USERID = (req, res, next) => {
     const userId = req.params.userId;
-    const place = USER_PLACES.find((place) => place.creator === userId);
+    const place = USER_PLACES.filter((place) => place.creator === userId);
     if (!place) {
         // const error = new Error('User not found');
         // error.statusCode = 404;
@@ -51,4 +52,20 @@ exports.GET_PLACES_BY_USERID = (req, res, next) => {
     res.json({
         place
     });
+}
+
+exports.CREATE_NEW_PLACE = (req,res,next)=> {
+    const { title, description, address, coordinates, creator } = req.body;
+    const createPlace = {
+        id: uuidv4(),
+        title,
+        description,
+        address,
+        location: coordinates,
+        creator
+     //   imageUrl: req.body.id
+    }
+    USER_PLACES.push(createPlace);
+    console.log(USER_PLACES);
+    res.status(201).json({place: createPlace});
 }
