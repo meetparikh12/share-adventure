@@ -54,7 +54,7 @@ class Auth extends Component {
     }
 }
 Auth.propTypes = {
-    isUserLoggedIn: PropTypes.object.isRequired
+    isUserLoggedIn: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => {

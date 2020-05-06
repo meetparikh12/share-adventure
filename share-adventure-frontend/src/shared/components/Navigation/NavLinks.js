@@ -13,7 +13,7 @@ class NavLinks extends React.Component {
     logout(){
         this.props.setIsUserLoggedIn(!this.props.isUserLoggedIn);
     }
-    
+
     render(){
         const { isUserLoggedIn } = this.props;
         return (
@@ -45,7 +45,7 @@ class NavLinks extends React.Component {
     }
 }
 NavLinks.propTypes = {
-    isUserLoggedIn : PropTypes.object.isRequired
+    isUserLoggedIn : PropTypes.bool.isRequired
 }
 const mapStateToProps = state => {
     return {
@@ -57,7 +57,7 @@ const mapDispatchToProps = dispatchEvent => {
     return {
         setIsUserLoggedIn: (isUserLoggedIn) => {
             dispatchEvent(setIsUserLoggedIn(isUserLoggedIn));
-           
+            
         }
     }
 }

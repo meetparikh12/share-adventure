@@ -1,6 +1,7 @@
 import React from 'react';
  //{ useState } from 'react';
-
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
 //import Modal from '../../shared/components/UIElements/Modal';
@@ -79,12 +80,22 @@ const PlaceItem = props => {
           </div>
           <div className="place-item__actions">
             <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
-            <Button to={`/place/${props.id}`}>EDIT</Button>
-            <Button danger onClick={showDeleteWarningHandler}>DELETE</Button>
+            {props.isUserLoggedIn && <Button to={`/place/${props.id}`}>EDIT</Button>}
+            {props.isUserLoggedIn && <Button danger onClick={showDeleteWarningHandler}>DELETE</Button>}
           </div>
         </Card>
       </li>
   );
 };
 
-export default PlaceItem;
+PlaceItem.propTypes = {
+  isUserLoggedIn: PropTypes.bool.isRequired
+}
+
+const mapStateToProps = state => {
+  return {
+    isUserLoggedIn: state.user.isUserLoggedIn
+  }
+}
+
+export default connect(mapStateToProps, null)(PlaceItem);
