@@ -75,13 +75,13 @@ exports.CREATE_NEW_PLACE = async (req,res,next)=> {
     try {
     await createdPlace.save();
     } catch(err) {
-        const error = new ErrorHandling('Place not create, please try again', 500);
+        const error = new ErrorHandling('Place not created, please try again', 500);
         return next(error);
     }
     res.status(201).json({place: createdPlace});
 }
 
-exports.UPDATE_PLACE = (req,res,next) => {
+exports.UPDATE_PLACE = async (req,res,next) => {
     const error = validationResult(req);
     if (!error.isEmpty()) {
         error.statusCode = 422;
@@ -89,32 +89,65 @@ exports.UPDATE_PLACE = (req,res,next) => {
         return next(error);
     }
     const placeId = req.params.placeId;
-    const place = USER_PLACES.find((place)=> place.id === placeId);
-    let updatedPlace;
-    if(!place) {
-        throw new ErrorHandling('Place not found', 404);
-    } else {
-         updatedPlace = {...place}
+    let place;
+    try{
+     place = await Place.findById(placeId);
     }
-    const {title, description} = req.body;
-    const placeIndex = USER_PLACES.findIndex((place) => place.id === placeId);
-    updatedPlace.title = title;
-    updatedPlace.description = description;
-    USER_PLACES[placeIndex] = updatedPlace;
+    catch(err) {
+        return next(new ErrorHandling('Try again', 500));
+    }
 
-    res.status(200).json({place: updatedPlace});
+    if(!place){
+        return next(new ErrorHandling('Place not found', 404));
+    }
+
+    const { title, description} = req.body;
+    place.title = title;
+    place.description = description;
+    try{
+      await place.save();
+    } catch(err) {
+        return next(new ErrorHandling('Place not updated', 500));
+    } 
+    res.status(200).json({place});
+    // let updatedPlace;
+    // if(!place) {
+    //     throw new ErrorHandling('Place not found', 404);
+    // } else {
+    //      updatedPlace = {...place}
+    // }
+    //const {title, description} = req.body;
+    // const placeIndex = USER_PLACES.findIndex((place) => place.id === placeId);
+    // updatedPlace.title = title;
+    // updatedPlace.description = description;
+    // USER_PLACES[placeIndex] = updatedPlace;
 }
 
-exports.DELETE_PLACE = (req,res,next)=> {
+exports.DELETE_PLACE = async (req,res,next)=> {
     const placeId = req.params.placeId;
-    const place = USER_PLACES.find((place)=> place.id === placeId);
+    //const place = USER_PLACES.find((place)=> place.id === placeId);
+    let place;
+    try {
+        place = await Place.findById(placeId);
+    } catch (err) {
+        return next(new ErrorHandling('Try again', 500));
+    }
     if(!place) {
-        throw new ErrorHandling('Place not found', 404);
+        return next(new ErrorHandling('Place not found', 404));
     } 
-    const placeIndex = USER_PLACES.findIndex((place) => place.id === placeId);
+
+    try {
+        await Place.findByIdAndRemove(placeId);
+    } catch(err) {
+        return next(new ErrorHandling('Place not deleted', 500));
+    }
+    
+    res.status(200).json({message: 'Place deleted'});
+
+    //const placeIndex = USER_PLACES.findIndex((place) => place.id === placeId);
     //actually removes element from array
-    USER_PLACES.splice(placeIndex);
+    //USER_PLACES.splice(placeIndex);
     //can also use filter method on USER_PLACES array to get a set of array on condition, it does not change the original array
 
-    res.status(200).json({message: 'Place deleted'});
+    
 }
