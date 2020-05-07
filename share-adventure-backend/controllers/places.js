@@ -27,33 +27,34 @@ const USER_PLACES = [{
     imageUrl: "https://lh5.googleusercontent.com/p/AF1QipMMdy3joN1_HlEM-ZwVBkm5-__1ZTrcbUHoIkOE=w408-h256-k-no"
 }]
 
-exports.GET_PLACE_BY_ID = (req, res, next) => {
+exports.GET_PLACE_BY_ID = async (req, res, next) => {
     const placeId = req.params.placeId;
-    const place = USER_PLACES.find((place) => place.id === placeId);
-    if (!place) {
-        // const error = new Error('Place not found');
-        // error.statusCode = 404;
-        // next(error);
-        throw new ErrorHandling('Place not found', 404);
+    let place;
+    try {
+         place = await Place.findOne({_id: placeId}).exec();  
+    } catch(err) {
+        //error for missing information in url (invalid ID)
+        return next(new ErrorHandling('Place not fetched', 500));
     }
-    res.json({
-        place
-    });
-
+    if (!place) {
+        //error for place not found in DB (valid ID)
+        return next(new ErrorHandling('Place not found', 404));
+    }
+    res.status(200).json({place});
 }
 
-exports.GET_PLACES_BY_USERID = (req, res, next) => {
+exports.GET_PLACES_BY_USERID = async (req, res, next) => {
     const userId = req.params.userId;
-    const place = USER_PLACES.filter((place) => place.creator === userId);
-    if (!place) {
-        // const error = new Error('User not found');
-        // error.statusCode = 404;
-        // next(error);
-        return next(new ErrorHandling('User not found', 404));
+    let places;
+    try {
+        places = await Place.find({creator: userId}).exec();
+    } catch(err){
+        return next(new ErrorHandling('Places not fetched', 500));
     }
-    res.json({
-        place
-    });
+    if (places.length === 0) {
+        return next(new ErrorHandling('Place not found', 404));
+    }
+    res.json({places});
 }
 
 exports.CREATE_NEW_PLACE = async (req,res,next)=> {
