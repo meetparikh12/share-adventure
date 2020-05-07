@@ -9,7 +9,7 @@ const placeSchema = new mongoose.Schema({
         type: String, required: true
     },
     address: { type: String, required: true},
-    creator: { type: String, required: true},
+    creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     image: { type: String, required: true}
 })
 

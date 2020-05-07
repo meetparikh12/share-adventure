@@ -2,6 +2,8 @@ const ErrorHandling = require('../models/error-handling');
 const { v4: uuidv4 } = require('uuid');
 const { validationResult } = require('express-validator');
 const Place = require('../models/place');
+const User = require('../models/user');
+const mongoose = require('mongoose');
 
 exports.GET_PLACE_BY_ID = async (req, res, next) => {
     const placeId = req.params.placeId;
@@ -41,6 +43,15 @@ exports.CREATE_NEW_PLACE = async (req,res,next)=> {
         return next(error);
     }
     const { title, description, address, creator } = req.body;
+    let user;
+    try {
+         user = await User.findById(creator);
+    } catch(err){
+        return next(new ErrorHandling('Try again', 500));
+    }
+    if(!user) {
+        return next(new ErrorHandling('User not found', 404));
+    }
     const createdPlace = new Place({
         title,
         description,
@@ -48,12 +59,19 @@ exports.CREATE_NEW_PLACE = async (req,res,next)=> {
         creator,
         image: "https://lh5.googleusercontent.com/p/AF1QipP-NhTcS5og3oV5i9Io6VCI6L9SId9olNJx12iI=w408-h272-k-no"
     });
+
     try {
-    await createdPlace.save();
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await createdPlace.save({session});
+        user.places.unshift(createdPlace);
+        await user.save({session});
+        await session.commitTransaction();
     } catch(err) {
         const error = new ErrorHandling('Place not created, please try again', 500);
         return next(error);
     }
+
     res.status(201).json({place: createdPlace});
 }
 
