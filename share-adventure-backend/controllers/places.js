@@ -1,5 +1,6 @@
 const ErrorHandling = require('../models/error-handling');
 const { v4: uuidv4 } = require('uuid');
+const { validationResult } = require('express-validator');
 
 const USER_PLACES = [{
     id: 'p1',
@@ -55,6 +56,12 @@ exports.GET_PLACES_BY_USERID = (req, res, next) => {
 }
 
 exports.CREATE_NEW_PLACE = (req,res,next)=> {
+    const error = validationResult(req);
+    if(!error.isEmpty()){
+        error.statusCode = 422;
+        error.message = error.array()
+        return next(error);
+    }
     const { title, description, address, coordinates, creator } = req.body;
     const createPlace = {
         id: uuidv4(),
@@ -71,6 +78,12 @@ exports.CREATE_NEW_PLACE = (req,res,next)=> {
 }
 
 exports.UPDATE_PLACE = (req,res,next) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+        error.statusCode = 422;
+        error.message = error.array()
+        return next(error);
+    }
     const placeId = req.params.placeId;
     const place = USER_PLACES.find((place)=> place.id === placeId);
     let updatedPlace;

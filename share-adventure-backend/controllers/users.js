@@ -1,5 +1,6 @@
 const { v4 : uuidv4} = require('uuid');
 const ErrorHandling = require('../models/error-handling');
+const { validationResult } = require('express-validator');
 
 const USERS = [{
     id: 'u1',
@@ -18,6 +19,12 @@ exports.GET_USERS = (req, res, next) => {
 }
 
 exports.SIGN_UP = (req,res,next) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+        error.statusCode = 422;
+        error.message = error.array()
+        return next(error);
+    }
     const userRegister = {
         id: uuidv4(),
         name: req.body.name,
@@ -33,6 +40,12 @@ exports.SIGN_UP = (req,res,next) => {
 }
 
 exports.LOGIN = (req,res,next)=> {
+    const error = validationResult(req);
+    if(!error.isEmpty()){
+        error.statusCode = 422;
+        error.message = error.array()
+        return next(error);
+    }
     const userLogin = {
         email: req.body.email,
         password: req.body.password
