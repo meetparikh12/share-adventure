@@ -3,20 +3,16 @@ const ErrorHandling = require('../models/error-handling');
 const { validationResult } = require('express-validator');
 const User = require('../models/user');
 
-const USERS = [{
-    id: 'u1',
-    name: 'Meet Parikh',
-    email: 'parikhmeet1234@gmail.com',
-    password: 'meet1234',
-}];
-
-
-exports.GET_USERS = (req, res, next) => {
-
-    res.json({
-    users: USERS
-    });
-
+exports.GET_USERS = async (req, res, next) => {
+    let users;
+    try {
+         users = await User.find({}, '-password').exec()
+    } catch (error) {
+        return next(new ErrorHandling('Cannot fetch users', 500));
+    } 
+    if(users.length === 0) {return next(new ErrorHandling('No users found', 404))};
+    
+    res.status(200).json({users});
 }
 
 exports.SIGN_UP = async (req,res,next) => {
@@ -47,23 +43,24 @@ exports.SIGN_UP = async (req,res,next) => {
     res.status(201).json({user: userRegister});
 }
 
-exports.LOGIN = (req,res,next)=> {
+exports.LOGIN = async (req,res,next)=> {
     const error = validationResult(req);
     if(!error.isEmpty()){
         error.statusCode = 422;
         error.message = error.array()
         return next(error);
+    } 
+    const { email, password } = req.body;
+    let userLogin;
+    try {
+        userLogin = await User.findOne({email})
+    } catch(err){
+        return next(new ErrorHandling('Try again', 500));   
+    } 
+
+    if(!userLogin || userLogin.password !== password) {
+        return next(new ErrorHandling('Invalid credentials', 401));
     }
-    const userLogin = {
-        email: req.body.email,
-        password: req.body.password
-    }
-    const user = USERS.find((user)=> user.email === userLogin.email);
-    if(!user) {
-        throw new ErrorHandling('User not found', 404);
-    }
-    if(user.password !== userLogin.password){
-        throw new ErrorHandling('Password mismatch', 401);
-    }
-    res.status(200).json({user});
+    
+    res.status(200).json({user: userLogin});
 }
