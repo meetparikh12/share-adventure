@@ -1,4 +1,3 @@
-const { v4 : uuidv4} = require('uuid');
 const ErrorHandling = require('../models/error-handling');
 const { validationResult } = require('express-validator');
 const User = require('../models/user');
@@ -6,7 +5,7 @@ const User = require('../models/user');
 exports.GET_USERS = async (req, res, next) => {
     let users;
     try {
-         users = await User.find({}, '-password').exec()
+         users = await User.find({}, '-password').populate('places','title description').exec()
     } catch (error) {
         return next(new ErrorHandling('Cannot fetch users', 500));
     } 

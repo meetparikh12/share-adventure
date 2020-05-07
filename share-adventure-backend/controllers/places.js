@@ -1,5 +1,4 @@
 const ErrorHandling = require('../models/error-handling');
-const { v4: uuidv4 } = require('uuid');
 const { validationResult } = require('express-validator');
 const Place = require('../models/place');
 const User = require('../models/user');
@@ -23,16 +22,19 @@ exports.GET_PLACE_BY_ID = async (req, res, next) => {
 
 exports.GET_PLACES_BY_USERID = async (req, res, next) => {
     const userId = req.params.userId;
-    let places;
+    //let places;
+    let user;
     try {
-        places = await Place.find({creator: userId}).exec();
+        user = await User.findById(userId).populate('places');
     } catch(err){
         return next(new ErrorHandling('Places not fetched', 500));
     }
-    if (places.length === 0) {
-        return next(new ErrorHandling('Place not found', 404));
+    
+    //if(!places || !places.length === 0)
+    if (user.places.length === 0) {
+        return next(new ErrorHandling('No places found', 404));
     }
-    res.json({places});
+    res.json({places: user.places});
 }
 
 exports.CREATE_NEW_PLACE = async (req,res,next)=> {
@@ -84,8 +86,8 @@ exports.UPDATE_PLACE = async (req,res,next) => {
     }
     const placeId = req.params.placeId;
     let place;
-    try{
-     place = await Place.findById(placeId);
+    try {
+        place = await Place.findById(placeId);
     }
     catch(err) {
         return next(new ErrorHandling('Try again', 500));
@@ -111,7 +113,7 @@ exports.DELETE_PLACE = async (req,res,next)=> {
     const placeId = req.params.placeId;
     let place;
     try {
-        place = await Place.findById(placeId);
+        place = await Place.findById(placeId).populate('creator');
     } catch (err) {
         return next(new ErrorHandling('Try again', 500));
     }
@@ -120,7 +122,19 @@ exports.DELETE_PLACE = async (req,res,next)=> {
     } 
 
     try {
-        await Place.findByIdAndRemove(placeId);
+        const session = await mongoose.startSession();
+        session.startTransaction();
+
+        //alternate way to access user object using creator / thanks to populate method
+        place.creator.places.pull(place);
+        await place.creator.save({session});
+        
+        // const user = await User.findById(place.creator.toString());
+        // user.places.pull(place);
+        // await user.save({session});
+
+        await place.remove({session});
+        await session.commitTransaction();
     } catch(err) {
         return next(new ErrorHandling('Place not deleted', 500));
     }
