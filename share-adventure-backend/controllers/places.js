@@ -1,6 +1,7 @@
 const ErrorHandling = require('../models/error-handling');
 const { v4: uuidv4 } = require('uuid');
 const { validationResult } = require('express-validator');
+const Place = require('../models/place');
 
 const USER_PLACES = [{
     id: 'p1',
@@ -55,26 +56,28 @@ exports.GET_PLACES_BY_USERID = (req, res, next) => {
     });
 }
 
-exports.CREATE_NEW_PLACE = (req,res,next)=> {
+exports.CREATE_NEW_PLACE = async (req,res,next)=> {
     const error = validationResult(req);
     if(!error.isEmpty()){
         error.statusCode = 422;
         error.message = error.array()
         return next(error);
     }
-    const { title, description, address, coordinates, creator } = req.body;
-    const createPlace = {
-        id: uuidv4(),
+    const { title, description, address, creator } = req.body;
+    const createdPlace = new Place({
         title,
         description,
         address,
-        location: coordinates,
-        creator
-     //   imageUrl: req.body.id
+        creator,
+        image: "https://lh5.googleusercontent.com/p/AF1QipP-NhTcS5og3oV5i9Io6VCI6L9SId9olNJx12iI=w408-h272-k-no"
+    });
+    try {
+    await createdPlace.save();
+    } catch(err) {
+        const error = new ErrorHandling('Place not create, please try again', 500);
+        return next(error);
     }
-    USER_PLACES.push(createPlace);
-    console.log(USER_PLACES);
-    res.status(201).json({place: createPlace});
+    res.status(201).json({place: createdPlace});
 }
 
 exports.UPDATE_PLACE = (req,res,next) => {

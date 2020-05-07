@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const placesRoutes = require('./routes/places');
 const userRoutes = require('./routes/users');
 const ErrorHandling = require('./models/error-handling');
+const mongoose = require('mongoose');
+const config = require('config');
+
 app.use(bodyParser.json());
 
 app.use('/api/places', placesRoutes);
@@ -20,5 +23,18 @@ app.use((error,req,res,next)=> {
     const status = error.statusCode || 500;
     res.status(status).json({message});
 })
+
+mongoose.connect(config.get('mongoURI'), {
+    useNewUrlParser: true,
+    useUnifiedTopology: true, 
+    useFindAndModify: false, 
+    useCreateIndex: true
+})
+.then(()=> {
 app.listen(5000);
-console.log("Server is listening on port " +5000);
+console.log("Server is listening on port 5000");
+})
+.catch((error)=> {
+    console.log(error);
+});
+
