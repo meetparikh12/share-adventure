@@ -53,23 +53,23 @@ class Auth extends Component {
         )
     }
 }
-Auth.propTypes = {
-    isUserLoggedIn: PropTypes.bool.isRequired
-}
-
-const mapStateToProps = state => {
-    return {
-        isUserLoggedIn : state.user.isUserLoggedIn
+    Auth.propTypes = {
+        isUserLoggedIn: PropTypes.bool.isRequired
     }
-}
 
-const mapDispatchToProps = dispatchEvent => {
-    return {
-        setIsUserLoggedIn : (isUserLoggedIn, history) => {
-            dispatchEvent(setIsUserLoggedIn(isUserLoggedIn));
-            history.push('/');
+    const mapStateToProps = state => {
+        return {
+            isUserLoggedIn : state.user.isUserLoggedIn
         }
     }
-}
 
-export default connect(mapStateToProps,mapDispatchToProps)(Auth);
+    const mapDispatchToProps = dispatchEvent => {
+        return {
+            setIsUserLoggedIn : (isUserLoggedIn, history) => {
+                dispatchEvent(setIsUserLoggedIn(isUserLoggedIn));
+                history.push('/');
+            }
+        }
+    }
+
+    export default connect(mapStateToProps,mapDispatchToProps)(Auth);

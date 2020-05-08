@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios';
+import {connect} from 'react-redux';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { userCreationError} from '../../actions/actions';
 
-export default class Register extends Component {
+toast.configure()
+class Register extends Component {
     
     constructor(props){
         super(props);
@@ -28,8 +34,9 @@ export default class Register extends Component {
             email: this.state.email,
             password: this.state.password
         }
-
-        console.log(newUser);
+        
+        this.props.createNewUser(newUser,this.props.history);
+        
     }
 
     render() {
@@ -65,3 +72,24 @@ export default class Register extends Component {
         )
     }
 }
+
+
+const mapDispatchToProps = dispatchEvent => {
+    return {
+        createNewUser : (user,history) => {
+            axios.post('http://localhost:5000/api/users/signup', user)
+                .then((res) => {
+                    console.log(res.data.user);
+                    history.push('/login');
+                    toast.success('Registered Successfully', {position: toast.POSITION.BOTTOM_RIGHT});
+                    dispatchEvent(userCreationError([]));
+                })
+                .catch((err) => {
+                    console.log(err.response.data.message);
+                    toast.error(err.response.data.message[0].msg, {position: toast.POSITION.BOTTOM_RIGHT});
+                    dispatchEvent(userCreationError(err.response.data.message))
+                });
+        }
+    }
+}
+export default connect(null,mapDispatchToProps)(Register);

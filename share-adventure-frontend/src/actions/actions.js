@@ -6,3 +6,9 @@ export const setIsUserLoggedIn = (isUserLoggedIn) => {
         payload: isUserLoggedIn
     }
 }
+export const userCreationError = (error) => {
+    return {
+        type: actionTypes.USER_CREATION_ERROR,
+        payload: error
+    }
+}
