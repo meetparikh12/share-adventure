@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import axios from 'axios';
 import { getAllPlaces } from '../../actions/actions';
 import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 toast.configure();
 class UserPlaces extends React.Component {
@@ -34,7 +35,6 @@ const mapDispatchToProps = dispatchEvent => {
             .catch((err) => {
                 console.log(err)
                 dispatchEvent(getAllPlaces([]));
-                toast.error(err.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT})
             });
         }
     }

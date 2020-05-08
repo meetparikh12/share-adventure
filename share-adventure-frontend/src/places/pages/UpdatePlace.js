@@ -1,31 +1,11 @@
 import React from 'react';
-
-// import Input from '../../shared/components/FormElements/Input';
 import './NewPlace.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-const USER_PLACES = [{
-    id: 'p1',
-    title: 'Eiffel Tower',
-    description: "Gustave Eiffel's iconic, wrought-iron 1889 tower, with steps and elevators to observation decks.",
-    address: "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France",
-    location: {
-        lat: 48.8583701,
-        long: 2.2922926
-    },
-    creator: 'u1',
-    imageUrl: "https://lh5.googleusercontent.com/p/AF1QipP-NhTcS5og3oV5i9Io6VCI6L9SId9olNJx12iI=w408-h272-k-no"
-}, {
-    id: 'p2',
-    title: 'Castel Cafe',
-    description: "Late-night food , Cosy, Casual ",
-    address: "5 Avenue de Suffren, 75007 Paris, France",
-    location: {
-        lat: 48.8583701,
-        long: 2.2922926
-    },
-    creator: 'u2',
-    imageUrl: "https://lh5.googleusercontent.com/p/AF1QipMMdy3joN1_HlEM-ZwVBkm5-__1ZTrcbUHoIkOE=w408-h256-k-no"
-}]
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { connect } from 'react-redux';
+toast.configure();
 
 class UpdatePlace extends React.Component {
     constructor(props) {
@@ -34,14 +14,10 @@ class UpdatePlace extends React.Component {
         this.state = {
             title : '',
             description: '',
-            image: '',
-            address:'',
-            creator:'',
-            id:''
+            placeId : props.match.params.placeId
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);  
         this.formSubmitHandler = this.formSubmitHandler.bind(this);
-
     }
     
     formChangeHandler(event){
@@ -55,20 +31,38 @@ class UpdatePlace extends React.Component {
         const placeData = {
             title: this.state.title,
             description: this.state.description,
-            image: `${this.fileInput.current.files[0].name}`,
-            address: this.state.address
+         //   image: `${this.fileInput.current.files[0].name}`,
         }
-        console.log(placeData);
-        alert('Your data has been submitted');
+        
+        axios.patch(`http://localhost:5000/api/places/${this.state.placeId}`, placeData)
+        .then((res)=> {
+            console.log(res.data.place);
+            this.props.history.push(`/${this.props.userInfo._id}/places`)
+        })
+        .catch((err)=> {
+            console.log(err.response.data);
+            toast.error(err.response.data.message[0].msg || err.response.data.message, {
+                position: toast.POSITION.BOTTOM_RIGHT
+            });
+        });
     }
 
-
+    componentDidMount(){
+        const {placeId} = this.props.match.params;
+        axios.get(`http://localhost:5000/api/places/${placeId}`)
+        .then((res)=> {
+            const { title, description } = res.data.place;
+            this.setState({
+                title, description
+            })
+        })
+        .catch((err)=> {
+            toast.error(err.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
+        })
+    }
 
     render(){
 
-        const {placeId} = this.props.match.params;
-        const loadPlace = USER_PLACES.find((place)=> place.id === placeId);
-        console.log(loadPlace);
         return (
            <div className="add-PBI">
                 <div className="container">
@@ -80,17 +74,10 @@ class UpdatePlace extends React.Component {
                             <h4 className="display-4 text-center">Update Place</h4>
                             <form onSubmit={this.formSubmitHandler}>
                                 <div className="form-group">
-                                    <input type="text" className="form-control form-control-lg" onChange = {this.formChangeHandler} value={loadPlace.title} name="title" placeholder="Place Name" />
+                                    <input required type="text" className="form-control form-control-lg" onChange = {this.formChangeHandler} value={this.state.title} name="title" placeholder="Place Name" />
                                 </div>
                                 <div className="form-group">
-                                    <textarea className="form-control form-control-lg"  onChange = {this.formChangeHandler} value={loadPlace.description} placeholder="Place Description" name="description"></textarea>
-                                </div>
-                                <div className="form-group">
-                                    <input className="form-control form-control-lg" disabled onChange = {this.formChangeHandler} value={loadPlace.address} placeholder="Address" name="address"/>
-                                </div>
-                                <h6>Upload Image:</h6>
-                                <div className="form-group">
-                                    <input type="file" ref={this.fileInput} className="form-control form-control-lg" name="image" />
+                                    <textarea required className="form-control form-control-lg"  onChange = {this.formChangeHandler} value={this.state.description} placeholder="Place Description" name="description"></textarea>
                                 </div>
                                 <input type="submit" className="btn btn-danger btn-block mt-4" />
                             </form>
@@ -103,4 +90,10 @@ class UpdatePlace extends React.Component {
     };
 }
 
-export default UpdatePlace;
+const mapStateToProps = state => {
+    return {
+        userInfo: state.user.loginUserInfo
+    }
+}
+
+export default connect(mapStateToProps,null)(UpdatePlace);

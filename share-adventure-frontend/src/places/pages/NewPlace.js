@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 toast.configure();
 class NewPlace extends React.Component {
