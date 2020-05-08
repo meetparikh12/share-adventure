@@ -15,3 +15,10 @@ export const userCreationError = (error) => {
         payload: error
     }
 }
+
+export const getAllUsers = (users) => {
+    return {
+        type: actionTypes.GET_ALL_USERS,
+        payload: users
+    }
+}

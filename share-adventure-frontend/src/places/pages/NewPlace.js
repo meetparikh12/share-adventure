@@ -1,8 +1,11 @@
 import React from 'react';
-
-// import Input from '../../shared/components/FormElements/Input';
 import './NewPlace.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
+import { connect } from 'react-redux';
+import {toast } from 'react-toastify';
+
+toast.configure();
 class NewPlace extends React.Component {
     constructor(props) {
         super(props);
@@ -31,11 +34,22 @@ class NewPlace extends React.Component {
         const placeData = {
             title: this.state.title,
             description: this.state.description,
-            image: `${this.fileInput.current.files[0].name}`,
-            address: this.state.address
+            //image: `${this.fileInput.current.files[0].name}`,
+            address: this.state.address,
+            creator: this.props.user._id
         }
         console.log(placeData);
-        alert('Your data has been submitted');
+        axios.post('http://localhost:5000/api/places', placeData)
+        .then((res)=> {
+            console.log(res.data);
+            toast.success('Place Added!', {position: toast.POSITION.BOTTOM_RIGHT});
+            console.log(res.data.place.creator);
+           this.props.history.push('/')
+        })
+        .catch((err)=> {
+            console.log(err.response.data);
+            toast.error(err.response.data.message[0].msg || err.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
+        })
     }
 
     render(){
@@ -50,13 +64,13 @@ class NewPlace extends React.Component {
                             <h4 className="display-4 text-center">Add New Place</h4>
                             <form onSubmit={this.formSubmitHandler}>
                                 <div className="form-group">
-                                    <input type="text" className="form-control form-control-lg" onChange = {this.formChangeHandler} value={this.state.title} name="title" placeholder="Place Name" />
+                                    <input type="text" required className="form-control form-control-lg" onChange = {this.formChangeHandler} value={this.state.title} name="title" placeholder="Place Name" />
                                 </div>
                                 <div className="form-group">
-                                    <textarea className="form-control form-control-lg" onChange = {this.formChangeHandler} value={this.state.description} placeholder="Place Description" name="description"></textarea>
+                                    <textarea required className="form-control form-control-lg" onChange = {this.formChangeHandler} value={this.state.description} placeholder="Place Description" name="description"></textarea>
                                 </div>
                                 <div className="form-group">
-                                    <input className="form-control form-control-lg" onChange = {this.formChangeHandler} value={this.state.address} placeholder="Address" name="address"/>
+                                    <input required className="form-control form-control-lg" onChange = {this.formChangeHandler} value={this.state.address} placeholder="Address" name="address"/>
                                 </div>
                                 <h6>Upload Image:</h6>
                                 <div className="form-group">
@@ -72,5 +86,9 @@ class NewPlace extends React.Component {
         )
     };
 }
-
-export default NewPlace;
+const mapStateToProps = state => {
+    return {
+        user: state.user.loginUserInfo
+    }
+}
+export default connect(mapStateToProps,null)(NewPlace);

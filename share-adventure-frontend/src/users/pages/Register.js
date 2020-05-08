@@ -84,7 +84,7 @@ const mapDispatchToProps = dispatchEvent => {
                     dispatchEvent(userCreationError([]));
                 })
                 .catch((err) => {
-                    toast.error(err.response.data.message[0].msg, {position: toast.POSITION.BOTTOM_RIGHT});
+                    toast.error(err.response.data.message[0].msg || err.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
                     dispatchEvent(userCreationError(err.response.data.message))
                 });
         }
