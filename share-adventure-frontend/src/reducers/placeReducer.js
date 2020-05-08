@@ -10,6 +10,12 @@ const placeReducer = (state = initialState, action) => {
                 places: action.payload
             }
 
+        case actionTypes.DELETE_PLACE:
+            return {
+                ...state,
+                places: state.places.filter((place)=> place._id !== action.payload)
+            }
+
             default:
                 return {
                     ...state

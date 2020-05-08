@@ -1,73 +1,32 @@
 import React from 'react';
- //{ useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
-//import Modal from '../../shared/components/UIElements/Modal';
 import './PlaceItem.css';
+import { deletePlace } from '../../actions/actions';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const PlaceItem = props => {
-  //const [showMap, setShowMap] = useState(false);
-  //const [showConfirmModal, setShowConfirmModal] = useState(false);
-
     
-    const showDeleteWarningHandler = () => {
-      //setShowConfirmModal(true);
-      window.confirm('Do you want to delete this place? Please note that it cannot be undone.')
+    const showDeleteWarningHandler = (placeId) => {
+      
+      if(window.confirm('Do you want to delete this place? Please note that it cannot be undone.')) {
+          axios.delete(`http://localhost:5000/api/places/${placeId}`)
+          .then((res) => {
+              props.deletePlace(placeId);
+              toast.success(res.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
+          })
+          .catch((error) => toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT}));
+      }
     };
 
-    // const cancelDeleteHandler = () => {
-    //   setShowConfirmModal(false);
-    // };
-
-    // const confirmDeleteHandler = () => {
-    //   setShowConfirmModal(false);
-    //   console.log('DELETING...');
-    // };
-
   const openMapHandler = () => {
-   // setShowMap(true);
    alert('Sorry, Map can not be shown.');
   }
-  //const closeMapHandler = () => setShowMap(false);
 
   return (
-    // <React.Fragment>
-    //   <Modal
-    //     show={showMap}
-    //     onCancel={closeMapHandler}
-    //     header={props.address}
-    //     contentClass="place-item__modal-content"
-    //     footerClass="place-item__modal-actions"
-    //     footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
-    //   >
-    //     <div className="map-container">
-    //       <h2>THE MAP!</h2>
-    //     </div>
-    //   </Modal>
-    //   <Modal
-    //     show={showConfirmModal}
-    //     onCancel={cancelDeleteHandler}
-    //     header="Are you sure?"
-    //     footerClass="place-item__modal-actions"
-    //     footer={
-    //       <React.Fragment>
-    //         <Button inverse onClick={cancelDeleteHandler}>
-    //           CANCEL
-    //         </Button>
-    //         <Button danger onClick={confirmDeleteHandler}>
-    //           DELETE
-    //         </Button>
-    //       </React.Fragment>
-    //     }
-    //   >
-    //     <p>
-    //       Do you want to delete this place? Please note that it
-    //       can't be undone thereafter.
-    //     </p>
-    //   </Modal>
-
       <li className="place-item">
         <Card className="place-item__content">
           <div className="place-item__image">
@@ -81,7 +40,7 @@ const PlaceItem = props => {
           <div className="place-item__actions">
             <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
             {props.isUserLoggedIn && <Button to={`/place/${props.id}`}>EDIT</Button>}
-            {props.isUserLoggedIn && <Button danger onClick={showDeleteWarningHandler}>DELETE</Button>}
+            {props.isUserLoggedIn && <Button danger onClick={() => showDeleteWarningHandler(props.id)}>DELETE</Button>}
           </div>
         </Card>
       </li>
@@ -94,8 +53,13 @@ PlaceItem.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    isUserLoggedIn: state.user.isUserLoggedIn
+    isUserLoggedIn: state.user.isUserLoggedIn,
+    userInfo: state.user.loginUserInfo
   }
 }
-
-export default connect(mapStateToProps, null)(PlaceItem);
+const mapDispatchToProps = dispatchEvent => {
+  return {
+    deletePlace : (placeId) => {dispatchEvent(deletePlace(placeId))}
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(PlaceItem);

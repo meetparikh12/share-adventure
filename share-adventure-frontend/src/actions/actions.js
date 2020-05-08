@@ -29,3 +29,10 @@ export const getAllPlaces = (places) => {
         payload: places
     }
 }
+
+export const deletePlace = (placeId) => {
+    return {
+        type: actionTypes.DELETE_PLACE,
+        payload: placeId
+    }
+}
