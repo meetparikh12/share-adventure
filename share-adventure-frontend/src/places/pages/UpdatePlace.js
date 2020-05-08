@@ -5,6 +5,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { connect } from 'react-redux';
+import { trackPromise } from 'react-promise-tracker';
+
 toast.configure();
 
 class UpdatePlace extends React.Component {
@@ -33,7 +35,7 @@ class UpdatePlace extends React.Component {
             description: this.state.description,
          //   image: `${this.fileInput.current.files[0].name}`,
         }
-        
+        trackPromise(
         axios.patch(`http://localhost:5000/api/places/${this.state.placeId}`, placeData)
         .then((res)=> {
             console.log(res.data.place);
@@ -42,13 +44,15 @@ class UpdatePlace extends React.Component {
         .catch((err)=> {
             console.log(err.response.data);
             toast.error(err.response.data.message[0].msg || err.response.data.message, {
-                position: toast.POSITION.BOTTOM_RIGHT
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000
             });
-        });
+        }));
     }
 
     componentDidMount(){
         const {placeId} = this.props.match.params;
+        trackPromise(
         axios.get(`http://localhost:5000/api/places/${placeId}`)
         .then((res)=> {
             const { title, description } = res.data.place;
@@ -58,7 +62,7 @@ class UpdatePlace extends React.Component {
         })
         .catch((err)=> {
             toast.error(err.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
-        })
+        }))
     }
 
     render(){

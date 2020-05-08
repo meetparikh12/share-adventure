@@ -6,7 +6,7 @@ import { setUserInfo } from '../../actions/actions';
 import axios from 'axios';
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { trackPromise } from 'react-promise-tracker';
 toast.configure();
 
 class Auth extends Component {
@@ -31,15 +31,22 @@ class Auth extends Component {
             email: this.state.email,
             password: this.state.password
         }
-
+        trackPromise(
         axios.post('http://localhost:5000/api/users/login', loginUser)
             .then((res) => {
                 this.props.setUserInfo(!this.props.isUserLoggedIn,res.data.user,this.props.history);
-                toast.success('Logged in Successfully', {position: toast.POSITION.BOTTOM_RIGHT});
+                toast.success('Logged in Successfully', {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 1000
+                });
             })
             .catch((err) => {
-                toast.error(err.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
-            });    
+                toast.error(err.response.data.message, {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 1000
+                });
+            }));
+            
         }
 
     render() {

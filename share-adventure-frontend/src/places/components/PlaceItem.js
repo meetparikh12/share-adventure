@@ -7,18 +7,26 @@ import './PlaceItem.css';
 import { deletePlace } from '../../actions/actions';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { trackPromise } from 'react-promise-tracker';
 
 const PlaceItem = props => {
     
     const showDeleteWarningHandler = (placeId) => {
       
       if(window.confirm('Do you want to delete this place? Please note that it cannot be undone.')) {
-          axios.delete(`http://localhost:5000/api/places/${placeId}`)
+        trackPromise(  
+        axios.delete(`http://localhost:5000/api/places/${placeId}`)
           .then((res) => {
               props.deletePlace(placeId);
-              toast.success(res.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
+              toast.success(res.data.message, {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000
+              });
           })
-          .catch((error) => toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT}));
+          .catch((error) => toast.error(error.response.data.message, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: 1000
+          })));
       }
     };
 

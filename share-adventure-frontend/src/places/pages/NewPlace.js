@@ -5,6 +5,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { trackPromise } from 'react-promise-tracker';
 
 toast.configure();
 class NewPlace extends React.Component {
@@ -40,17 +41,24 @@ class NewPlace extends React.Component {
             creator: this.props.user._id
         }
         console.log(placeData);
+        trackPromise(
         axios.post('http://localhost:5000/api/places', placeData)
         .then((res)=> {
             console.log(res.data);
-            toast.success('Place Added!', {position: toast.POSITION.BOTTOM_RIGHT});
+            toast.success('Place Added!', {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000
+            });
             console.log(res.data.place.creator);
            this.props.history.push('/')
         })
         .catch((err)=> {
             console.log(err.response.data);
-            toast.error(err.response.data.message[0].msg || err.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
-        })
+            toast.error(err.response.data.message[0].msg || err.response.data.message, {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000
+            });
+        }));
     }
 
     render(){

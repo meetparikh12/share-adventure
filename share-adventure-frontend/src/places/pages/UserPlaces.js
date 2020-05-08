@@ -5,6 +5,7 @@ import axios from 'axios';
 import { getAllPlaces } from '../../actions/actions';
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { trackPromise } from 'react-promise-tracker';
 
 toast.configure();
 class UserPlaces extends React.Component {
@@ -29,6 +30,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatchEvent => {
     return {
         getAllPlaces : (userId) => {
+            trackPromise(
             axios.get(`http://localhost:5000/api/places/user/${userId}`)
             .then((res) => {
                 dispatchEvent(getAllPlaces(res.data.places));
@@ -36,7 +38,7 @@ const mapDispatchToProps = dispatchEvent => {
             .catch((err) => {
                 console.log(err)
                 dispatchEvent(getAllPlaces([]));
-            });
+            }));
         }
     }
 }

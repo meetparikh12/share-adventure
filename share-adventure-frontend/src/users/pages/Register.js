@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { userCreationError} from '../../actions/actions';
+import { trackPromise } from 'react-promise-tracker';
 
 toast.configure()
 class Register extends Component {
@@ -77,16 +78,23 @@ class Register extends Component {
 const mapDispatchToProps = dispatchEvent => {
     return {
         createNewUser : (user,history) => {
+            trackPromise(
             axios.post('http://localhost:5000/api/users/signup', user)
                 .then((res) => {
                     history.push('/login');
-                    toast.success('Registered Successfully', {position: toast.POSITION.BOTTOM_RIGHT});
+                    toast.success('Registered Successfully', {
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                        autoClose: 1000
+                    });
                     dispatchEvent(userCreationError([]));
                 })
                 .catch((err) => {
-                    toast.error(err.response.data.message[0].msg || err.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
+                    toast.error(err.response.data.message[0].msg || err.response.data.message, {
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                        autoClose: 1000
+                    });
                     dispatchEvent(userCreationError(err.response.data.message))
-                });
+                }));
         }
     }
 }

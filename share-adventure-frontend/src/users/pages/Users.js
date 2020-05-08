@@ -4,10 +4,13 @@ import axios from 'axios';
 import { connect} from 'react-redux';
 import { getAllUsers} from '../../actions/actions.js';
 import { toast } from 'react-toastify';
+import { trackPromise } from 'react-promise-tracker';
+
 toast.configure();
 class Users extends React.Component {
 
     componentDidMount(){
+        trackPromise(
         axios.get('http://localhost:5000/api/users')
         .then((res)=> {
             console.log(res.data.users);
@@ -15,8 +18,11 @@ class Users extends React.Component {
          })
         .catch((err)=>{
             console.log(err.response.data);
-            toast.error(err.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
-        })
+            toast.error(err.response.data.message, {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000
+            });
+        }));
     }
     render(){
         return (
