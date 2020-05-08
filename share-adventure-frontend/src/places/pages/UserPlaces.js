@@ -1,35 +1,43 @@
 import React from 'react'
-import { useParams } from "react-router-dom";
 import PlaceList from '../components/PlaceList';
+import {connect} from 'react-redux';
+import axios from 'axios';
+import { getAllPlaces } from '../../actions/actions';
+import {toast } from 'react-toastify';
 
- const USER_PLACES = [{
-     id: 'p1',
-     title: 'Eiffel Tower',
-     description: "Gustave Eiffel's iconic, wrought-iron 1889 tower, with steps and elevators to observation decks.",
-     address: "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France",
-     location: {
-         lat: 48.8583701,
-         long: 2.2922926
-     },
-     creator: 'u1',
-     imageUrl: "https://lh5.googleusercontent.com/p/AF1QipP-NhTcS5og3oV5i9Io6VCI6L9SId9olNJx12iI=w408-h272-k-no"
- }, {
-     id: 'p2',
-     title: 'Castel Cafe',
-     description: "Late-night food , Cosy, Casual ",
-     address: "5 Avenue de Suffren, 75007 Paris, France",
-     location: {
-         lat: 48.8583701,
-         long: 2.2922926
-     },
-     creator: 'u2',
-     imageUrl: "https://lh5.googleusercontent.com/p/AF1QipMMdy3joN1_HlEM-ZwVBkm5-__1ZTrcbUHoIkOE=w408-h256-k-no"
- }]
+toast.configure();
+class UserPlaces extends React.Component {
+    // const userId = useParams().userId;
+    // const loadedPlaces = USER_PLACES.filter((place)=> place.creator === userId);
 
-const UserPlaces = (props) => {
-    const userId = useParams().userId;
-    const loadedPlaces = USER_PLACES.filter((place)=> place.creator === userId);
-    return <PlaceList items={loadedPlaces} />;
+    componentDidMount(){
+        const { userId } = this.props.match.params;
+        this.props.getAllPlaces(userId);
+       // console.log(userId);
+    }
+    render(){
+        return <PlaceList items={this.props.places} />;
+    }
+}
+const mapStateToProps = state => {
+    return {
+        places: state.place.places
+    }
+}
+const mapDispatchToProps = dispatchEvent => {
+    return {
+        getAllPlaces : (userId) => {
+            axios.get(`http://localhost:5000/api/places/user/${userId}`)
+            .then((res) => {
+                dispatchEvent(getAllPlaces(res.data.places));
+            })
+            .catch((err) => {
+                console.log(err)
+                dispatchEvent(getAllPlaces([]));
+                toast.error(err.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT})
+            });
+        }
+    }
 }
 
-export default UserPlaces;
+export default connect(mapStateToProps,mapDispatchToProps)(UserPlaces);

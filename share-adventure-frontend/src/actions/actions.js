@@ -22,3 +22,10 @@ export const getAllUsers = (users) => {
         payload: users
     }
 }
+
+export const getAllPlaces = (places) => {
+    return {
+        type: actionTypes.GET_ALL_PLACES,
+        payload: places
+    }
+}

@@ -21,14 +21,13 @@ const PlaceList = props => {
     <ul className="place-list">
       {props.items.map(place => (
         <PlaceItem
-          key={place.id}
-          id={place.id}
-          image={place.imageUrl}
+          key={place._id}
+          id={place._id}
+          image={place.image}
           title={place.title}
           description={place.description}
           creatorId= {place.creator}
           address = {place.address}
-          coordinates = {place.location}
         />
       ))}
     </ul>
