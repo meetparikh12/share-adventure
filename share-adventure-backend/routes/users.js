@@ -9,9 +9,6 @@ route.post('/signup', [
     body('email').trim().isEmail().normalizeEmail().withMessage('Please enter a valid email'),
     body('password').isLength({min: 5}).withMessage('Password should be minimum of 5 characters.')
 ], usersController.SIGN_UP);
-route.post('/login', [
-    body('email').trim().isEmail().normalizeEmail().withMessage('Please enter a valid email'),
-    body('password').isLength({min: 5}).withMessage('Password should be minimum of 5 characters.')
-], usersController.LOGIN);
+route.post('/login', usersController.LOGIN);
 
 module.exports = route;
