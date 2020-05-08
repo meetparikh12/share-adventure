@@ -17,7 +17,8 @@ class UserPlaces extends React.Component {
        // console.log(userId);
     }
     render(){
-        return <PlaceList items={this.props.places} />;
+         const { userId } = this.props.match.params;
+        return <PlaceList userId = {userId} items={this.props.places} />;
     }
 }
 const mapStateToProps = state => {

@@ -15,7 +15,7 @@ class NavLinks extends React.Component {
     }
 
     render(){
-        const { isUserLoggedIn } = this.props;
+        const { isUserLoggedIn, userInfo } = this.props;
         return (
         <ul className="nav-links">
             <li>
@@ -23,7 +23,7 @@ class NavLinks extends React.Component {
             </li>
             { isUserLoggedIn &&
             <li>
-                <NavLink to="/u1/places">MY PLACES</NavLink>
+                <NavLink to={`/${userInfo._id}/places`}>MY PLACES</NavLink>
             </li>
             }
             { isUserLoggedIn &&
@@ -49,7 +49,8 @@ NavLinks.propTypes = {
 }
 const mapStateToProps = state => {
     return {
-        isUserLoggedIn : state.user.isUserLoggedIn
+        isUserLoggedIn : state.user.isUserLoggedIn,
+        userInfo: state.user.loginUserInfo
     }
 }
 

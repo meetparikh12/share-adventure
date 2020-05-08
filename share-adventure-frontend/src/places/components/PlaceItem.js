@@ -39,8 +39,8 @@ const PlaceItem = props => {
           </div>
           <div className="place-item__actions">
             <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
-            {props.isUserLoggedIn && <Button to={`/place/${props.id}`}>EDIT</Button>}
-            {props.isUserLoggedIn && <Button danger onClick={() => showDeleteWarningHandler(props.id)}>DELETE</Button>}
+            {props.userInfo._id === props.creatorId && <Button to={`/place/${props.id}`}>EDIT</Button>}
+            {props.userInfo._id === props.creatorId && <Button danger onClick={() => showDeleteWarningHandler(props.id)}>DELETE</Button>}
           </div>
         </Card>
       </li>
@@ -48,12 +48,11 @@ const PlaceItem = props => {
 };
 
 PlaceItem.propTypes = {
-  isUserLoggedIn: PropTypes.bool.isRequired
+  userInfo: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => {
   return {
-    isUserLoggedIn: state.user.isUserLoggedIn,
     userInfo: state.user.loginUserInfo
   }
 }
