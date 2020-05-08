@@ -1,6 +1,6 @@
 import * as actionTypes from '../actions/actionTypes';
 const initialState = {
-    userCreationErros : []
+    userCreationErros : [],
 }
 const errorReducer = (state=initialState,action) => {
     switch (action.type) {
@@ -9,7 +9,7 @@ const errorReducer = (state=initialState,action) => {
                 ...state,
                 userCreationErros: action.payload
             }
-    
+
         default: 
             return {
             ...state

@@ -2,7 +2,13 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { setIsUserLoggedIn } from '../../actions/actions';
+import { setUserInfo } from '../../actions/actions';
+import axios from 'axios';
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+toast.configure();
+
 class Auth extends Component {
     constructor(props){
         super(props);
@@ -25,9 +31,16 @@ class Auth extends Component {
             email: this.state.email,
             password: this.state.password
         }
-        this.props.setIsUserLoggedIn(!this.props.isUserLoggedIn,this.props.history);
-        console.log(loginUser);
-    }
+
+        axios.post('http://localhost:5000/api/users/login', loginUser)
+            .then((res) => {
+                this.props.setUserInfo(!this.props.isUserLoggedIn,res.data.user,this.props.history);
+                toast.success('Logged in Successfully', {position: toast.POSITION.BOTTOM_RIGHT});
+            })
+            .catch((err) => {
+                toast.error(err.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
+            });    
+        }
 
     render() {
         return (
@@ -53,23 +66,23 @@ class Auth extends Component {
         )
     }
 }
-    Auth.propTypes = {
-        isUserLoggedIn: PropTypes.bool.isRequired
-    }
+Auth.propTypes = {
+    isUserLoggedIn: PropTypes.bool.isRequired
+}
 
-    const mapStateToProps = state => {
-        return {
-            isUserLoggedIn : state.user.isUserLoggedIn
-        }
+const mapStateToProps = state => {
+    return {
+        isUserLoggedIn : state.user.isUserLoggedIn
     }
+}
 
-    const mapDispatchToProps = dispatchEvent => {
-        return {
-            setIsUserLoggedIn : (isUserLoggedIn, history) => {
-                dispatchEvent(setIsUserLoggedIn(isUserLoggedIn));
+const mapDispatchToProps = dispatchEvent => {
+    return {
+        setUserInfo: (isUserLoggedIn, userInfo, history) => {
+                dispatchEvent(setUserInfo(isUserLoggedIn, userInfo));
                 history.push('/');
-            }
         }
     }
+}
 
-    export default connect(mapStateToProps,mapDispatchToProps)(Auth);
+export default connect(mapStateToProps,mapDispatchToProps)(Auth);

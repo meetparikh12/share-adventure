@@ -79,13 +79,11 @@ const mapDispatchToProps = dispatchEvent => {
         createNewUser : (user,history) => {
             axios.post('http://localhost:5000/api/users/signup', user)
                 .then((res) => {
-                    console.log(res.data.user);
                     history.push('/login');
                     toast.success('Registered Successfully', {position: toast.POSITION.BOTTOM_RIGHT});
                     dispatchEvent(userCreationError([]));
                 })
                 .catch((err) => {
-                    console.log(err.response.data.message);
                     toast.error(err.response.data.message[0].msg, {position: toast.POSITION.BOTTOM_RIGHT});
                     dispatchEvent(userCreationError(err.response.data.message))
                 });

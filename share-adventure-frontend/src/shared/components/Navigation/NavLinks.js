@@ -5,13 +5,13 @@ import './NavLinks.css';
 //import { AuthContext } from '../context/Auth-Context';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { setIsUserLoggedIn } from '../../../actions/actions';
+import { setUserInfo } from '../../../actions/actions';
 
 class NavLinks extends React.Component {
   //  const auth = useContext(AuthContext);
 
     logout(){
-        this.props.setIsUserLoggedIn(!this.props.isUserLoggedIn);
+        this.props.setUserInfo(!this.props.isUserLoggedIn, {});
     }
 
     render(){
@@ -55,8 +55,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatchEvent => {
     return {
-        setIsUserLoggedIn: (isUserLoggedIn) => {
-            dispatchEvent(setIsUserLoggedIn(isUserLoggedIn));
+        setUserInfo: (isUserLoggedIn) => {
+            dispatchEvent(setUserInfo(isUserLoggedIn, {}));
             
         }
     }

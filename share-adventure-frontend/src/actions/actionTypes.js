@@ -1,2 +1,3 @@
 export const USER_LOGIN = 'USER_LOGIN';
 export const USER_CREATION_ERROR = 'USER_CREATION_ERROR';
+export const LOGIN_ERROR = 'LOGIN_ERROR';
