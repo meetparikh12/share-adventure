@@ -54,12 +54,16 @@ exports.CREATE_NEW_PLACE = async (req,res,next)=> {
     if(!user) {
         return next(new ErrorHandling('User not found', 404));
     }
+
+    let imagePath = req.file.path;
+    for(let i=0; i<req.file.path; i++){}
+    imagePath = imagePath.replace(/\\/g, "/");
     const createdPlace = new Place({
         title,
         description,
         address,
         creator,
-        image: "https://lh5.googleusercontent.com/p/AF1QipP-NhTcS5og3oV5i9Io6VCI6L9SId9olNJx12iI=w408-h272-k-no"
+        image: imagePath
     });
 
     try {

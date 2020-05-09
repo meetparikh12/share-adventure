@@ -6,6 +6,8 @@ const userRoutes = require('./routes/users');
 const ErrorHandling = require('./models/error-handling');
 const mongoose = require('mongoose');
 const config = require('config');
+const fs = require('fs');
+const path = require('path');
 
 app.use(bodyParser.json());
 
@@ -16,6 +18,7 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use('/uploads/images', express.static(path.join(__dirname,'uploads','images')))
 app.use('/api/places', placesRoutes);
 app.use('/api/users', userRoutes);
 
@@ -26,6 +29,11 @@ app.use((req,res,next)=> {
 
 //Middleware for handling errors
 app.use((error,req,res,next)=> {
+    if(req.file) {
+        fs.unlink(req.file.path, (err)=> {
+            console.log(err);
+        })
+    }
     const message = error.message || 'Unknown Error Occured';
     const status = error.statusCode || 500;
     res.status(status).json({message});
