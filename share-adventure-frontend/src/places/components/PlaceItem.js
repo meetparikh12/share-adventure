@@ -47,8 +47,8 @@ const PlaceItem = props => {
           </div>
           <div className="place-item__actions">
             <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
-            {props.userInfo._id === props.creatorId && <Button to={`/place/${props.id}`}>EDIT</Button>}
-            {props.userInfo._id === props.creatorId && <Button danger onClick={() => showDeleteWarningHandler(props.id)}>DELETE</Button>}
+            {props.userInfo.userId === props.creatorId && <Button to={`/place/${props.id}`}>EDIT</Button>}
+            {props.userInfo.userId === props.creatorId && <Button danger onClick={() => showDeleteWarningHandler(props.id)}>DELETE</Button>}
           </div>
         </Card>
       </li>

@@ -7,6 +7,9 @@ import axios from 'axios';
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { trackPromise } from 'react-promise-tracker';
+import setJwtToken from '../../security-utils/setJwtToken';
+import jwt_decode from 'jwt-decode';
+
 toast.configure();
 
 class Auth extends Component {
@@ -34,7 +37,11 @@ class Auth extends Component {
         trackPromise(
         axios.post('http://localhost:5000/api/users/login', loginUser)
             .then((res) => {
-                this.props.setUserInfo(!this.props.isUserLoggedIn,res.data.user,this.props.history);
+                const { token } = res.data;
+                localStorage.setItem("jwtToken", token);
+                setJwtToken(token);
+                const decodedToken = jwt_decode(token);
+                this.props.setUserInfo(!this.props.isUserLoggedIn,decodedToken,this.props.history);
                 toast.success('Logged in Successfully', {
                     position: toast.POSITION.BOTTOM_RIGHT,
                     autoClose: 1000

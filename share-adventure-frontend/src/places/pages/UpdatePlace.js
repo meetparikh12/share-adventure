@@ -39,7 +39,7 @@ class UpdatePlace extends React.Component {
         axios.patch(`http://localhost:5000/api/places/${this.state.placeId}`, placeData)
         .then((res)=> {
             console.log(res.data.place);
-            this.props.history.push(`/${this.props.userInfo._id}/places`)
+            this.props.history.push(`/${this.props.userInfo.userId}/places`)
         })
         .catch((err)=> {
             console.log(err.response.data);

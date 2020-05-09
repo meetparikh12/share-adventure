@@ -43,7 +43,7 @@ class NewPlace extends React.Component {
         newPlace.set('title', this.state.title)
         newPlace.set('description', this.state.description)
         newPlace.set('address', this.state.address)
-        newPlace.set('creator', this.props.user._id)
+        newPlace.set('creator', this.props.userInfo.userId)
         newPlace.append('image', this.state.placePhoto)
         
         trackPromise(
@@ -105,7 +105,7 @@ class NewPlace extends React.Component {
 }
 const mapStateToProps = state => {
     return {
-        user: state.user.loginUserInfo
+        userInfo: state.user.loginUserInfo
     }
 }
 export default connect(mapStateToProps,null)(NewPlace);

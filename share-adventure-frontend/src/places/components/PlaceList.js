@@ -10,7 +10,7 @@ const PlaceList = props => {
   if (props.items.length === 0) {
     return (
       <div className="place-list center">
-        { props.userId === props.userInfo._id ? 
+        { props.userId === props.userInfo.userId ? 
         <Card>
             <h2>No places found. Maybe share one?</h2>
             <Link to="/place/new">Share Place</Link>

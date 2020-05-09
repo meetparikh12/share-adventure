@@ -23,7 +23,7 @@ class NavLinks extends React.Component {
             </li>
             { isUserLoggedIn &&
             <li>
-                <NavLink to={`/${userInfo._id}/places`}>MY PLACES</NavLink>
+                <NavLink to={`/${userInfo.userId}/places`}>MY PLACES</NavLink>
             </li>
             }
             { isUserLoggedIn &&
