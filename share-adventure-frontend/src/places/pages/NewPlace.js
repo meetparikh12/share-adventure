@@ -11,20 +11,26 @@ toast.configure();
 class NewPlace extends React.Component {
     constructor(props) {
         super(props);
-        this.fileInput = React.createRef();
+       // this.fileInput = React.createRef();
         this.state = {
             title : '',
             description: '',
             image: '',
             address:'',
             creator:'',
-            id:''
+            id:'',
+            placeList: null
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);  
         this.formSubmitHandler = this.formSubmitHandler.bind(this);
-
+        this.fileSelectedHandler = this.fileSelectedHandler.bind(this);
     }
-    
+
+    fileSelectedHandler(event) {
+        this.setState({
+            placeList: event.target.files[0]
+        })
+    }
     formChangeHandler(event){
         this.setState({
             [event.target.name] : event.target.value,
@@ -33,16 +39,15 @@ class NewPlace extends React.Component {
 
     formSubmitHandler(event) {
         event.preventDefault();
-        const placeData = {
-            title: this.state.title,
-            description: this.state.description,
-            //image: `${this.fileInput.current.files[0].name}`,
-            address: this.state.address,
-            creator: this.props.user._id
-        }
-        console.log(placeData);
+        const formData = new FormData();
+        formData.set('title', this.state.title)
+        formData.set('description', this.state.description)
+        formData.set('address', this.state.address)
+        formData.set('creator', this.props.user._id)
+        formData.append('image', this.state.placeList)
+        
         trackPromise(
-        axios.post('http://localhost:5000/api/places', placeData)
+        axios.post('http://localhost:5000/api/places', formData)
         .then((res)=> {
             console.log(res.data);
             toast.success('Place Added!', {
@@ -81,10 +86,13 @@ class NewPlace extends React.Component {
                                 <div className="form-group">
                                     <input required className="form-control form-control-lg" onChange = {this.formChangeHandler} value={this.state.address} placeholder="Address" name="address"/>
                                 </div>
-                                <h6>Upload Image:</h6>
+                                <h6>Upload Photo:</h6>
                                 <div className="form-group">
-                                    <input type="file" ref={this.fileInput} className="form-control form-control-lg" name="image" />
+                                    <input type="file" accept='.jpg,.png,.jpeg' placeholder = "Upload Photos" onChange={this.fileSelectedHandler} className="form-control form-control-lg" name="image" />
                                 </div>
+                                {/* <div>
+                                    <img src="data:image/jpeg;base64,"
+                                </div> */}
                                 <input type="submit" className="btn btn-danger btn-block mt-4" />
                             </form>
                         </div>
