@@ -15,10 +15,18 @@ class Register extends Component {
         this.state = {
             name: '',
             email: '',
-            password: ''
+            password: '',
+            profilePhoto: null
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.formSubmitHandler = this.formSubmitHandler.bind(this);
+        this.fileSelectedHandler = this.fileSelectedHandler.bind(this);
+    }
+
+    fileSelectedHandler(event) {
+        this.setState({
+            profilePhoto: event.target.files[0]
+        })
     }
 
     formChangeHandler(event){
@@ -30,12 +38,12 @@ class Register extends Component {
     formSubmitHandler(event){
         event.preventDefault();  
 
-        const newUser = {
-            name: this.state.name,
-            email: this.state.email,
-            password: this.state.password
-        }
-        
+        const newUser = new FormData();
+        newUser.set('name', this.state.name)
+        newUser.set('email', this.state.email)
+        newUser.set('password', this.state.password)
+        newUser.append('image', this.state.profilePhoto)
+
         this.props.createNewUser(newUser,this.props.history);
         
     }
@@ -50,6 +58,10 @@ class Register extends Component {
                             <h1 className="display-4 text-center">Sign Up</h1>
                             <p className="lead text-center">Create your Account</p>
                             <form onSubmit={this.formSubmitHandler}>
+                                <h6>Select your Profile Photo:</h6>
+                                <div className="form-group">
+                                    <input type="file" required accept='.jpg,.png,.jpeg' onChange={this.fileSelectedHandler} className="form-control form-control-lg" name="image" />
+                                </div>
                                 <div className="form-group">
                                     <input type="text" className="form-control form-control-lg" onChange={this.formChangeHandler} value={this.state.name} placeholder="Name" name="name"
                                         required />
@@ -61,6 +73,7 @@ class Register extends Component {
                                 <div className="form-group">
                                     <input type="password" className="form-control form-control-lg" required onChange={this.formChangeHandler} value={this.state.password} placeholder="Password" name="password" />
                                 </div>
+
                                 <input type="submit" value="Sign up" className="btn btn-danger btn-block mt-4" />
                                 <Link to="/login"><button type="button"  className="btn btn-outline-danger btn-block mt-4">Login</button></Link>
                              

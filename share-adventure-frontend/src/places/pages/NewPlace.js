@@ -19,7 +19,7 @@ class NewPlace extends React.Component {
             address:'',
             creator:'',
             id:'',
-            placeList: null
+            placePhoto: null
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);  
         this.formSubmitHandler = this.formSubmitHandler.bind(this);
@@ -28,7 +28,7 @@ class NewPlace extends React.Component {
 
     fileSelectedHandler(event) {
         this.setState({
-            placeList: event.target.files[0]
+            placePhoto: event.target.files[0]
         })
     }
     formChangeHandler(event){
@@ -39,15 +39,15 @@ class NewPlace extends React.Component {
 
     formSubmitHandler(event) {
         event.preventDefault();
-        const formData = new FormData();
-        formData.set('title', this.state.title)
-        formData.set('description', this.state.description)
-        formData.set('address', this.state.address)
-        formData.set('creator', this.props.user._id)
-        formData.append('image', this.state.placeList)
+        const newPlace = new FormData();
+        newPlace.set('title', this.state.title)
+        newPlace.set('description', this.state.description)
+        newPlace.set('address', this.state.address)
+        newPlace.set('creator', this.props.user._id)
+        newPlace.append('image', this.state.placePhoto)
         
         trackPromise(
-        axios.post('http://localhost:5000/api/places', formData)
+        axios.post('http://localhost:5000/api/places', newPlace)
         .then((res)=> {
             console.log(res.data);
             toast.success('Place Added!', {
@@ -88,12 +88,12 @@ class NewPlace extends React.Component {
                                 </div>
                                 <h6>Upload Photo:</h6>
                                 <div className="form-group">
-                                    <input type="file" accept='.jpg,.png,.jpeg' placeholder = "Upload Photos" onChange={this.fileSelectedHandler} className="form-control form-control-lg" name="image" />
+                                    <input required type="file" accept='.jpg,.png,.jpeg' placeholder = "Upload Photos" onChange={this.fileSelectedHandler} className="form-control form-control-lg" name="image" />
                                 </div>
                                 {/* <div>
                                     <img src="data:image/jpeg;base64,"
                                 </div> */}
-                                <input type="submit" className="btn btn-danger btn-block mt-4" />
+                                <input type="submit" value="Add New Place" className="btn btn-danger btn-block mt-4" />
                             </form>
                         </div>
                     </div>

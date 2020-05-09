@@ -9,29 +9,8 @@ import MainNavigation from './shared/components/Navigation/MainNavigation';
 import UserPlaces from './places/pages/UserPlaces';
 import Auth from './users/pages/Login';
 import Register from './users/pages/Register';
-//import {AuthContext} from './shared/components/context/Auth-Context';
-
-// const App = () => {
-  
-//   const[isLoggedIn, setIsLoggedIn] = useState(false);
-
-//   const login = useCallback(
-//     () => {
-//       setIsLoggedIn(true);
-//     },
-//     [],
-//   )
-
-//   const logout = useCallback(
-//     () => {
-//       setIsLoggedIn(false);
-//     },
-//     [],
-//   )
-
 function App() {
   return (
-   // <AuthContext.Provider value = {{ isLoggedIn: isLoggedIn, login: login, logout: logout}}>
       <Router>
         <MainNavigation/>
           <main>
@@ -46,7 +25,6 @@ function App() {
             </Switch>
           </main>
       </Router>
-  //  </AuthContext.Provider>
   );
 }
 
