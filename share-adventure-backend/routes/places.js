@@ -12,6 +12,7 @@ route.post('/', fileUpload.single('image') ,[
     body('title').trim().isLength({min: 5}).withMessage('Title should be minimum of 5 characters'),
     body('description').trim().isLength({min: 10}).withMessage('Description shoulf be minimum of 10 characters'),
     body('address').trim().isLength({min: 10}).withMessage('Address should be minimum of 10 characters'),
+    //body('image').not().isEmpty().withMessage('Please provide an image')
 ], placeController.CREATE_NEW_PLACE);
 
 route.patch('/:placeId',[

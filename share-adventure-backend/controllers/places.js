@@ -3,6 +3,8 @@ const { validationResult } = require('express-validator');
 const Place = require('../models/place');
 const User = require('../models/user');
 const mongoose = require('mongoose');
+const fs = require('fs');
+const path = require('path');
 
 exports.GET_PLACE_BY_ID = async (req, res, next) => {
     const placeId = req.params.placeId;
@@ -56,7 +58,6 @@ exports.CREATE_NEW_PLACE = async (req,res,next)=> {
     }
 
     let imagePath = req.file.path;
-    for(let i=0; i<req.file.path; i++){}
     imagePath = imagePath.replace(/\\/g, "/");
     const createdPlace = new Place({
         title,
@@ -142,6 +143,18 @@ exports.DELETE_PLACE = async (req,res,next)=> {
     } catch(err) {
         return next(new ErrorHandling('Place not deleted', 500));
     }
-    
+    removeImageFromFolder(place.image);
     res.status(200).json({message: 'Place deleted'});
+}
+
+const removeImageFromFolder = filePath => {
+    filePath = path.join(__dirname,'../', filePath);
+    fs.unlink(filePath, (err)=> {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log("Place deleted");
+            
+        }
+    })
 }

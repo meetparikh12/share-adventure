@@ -30,9 +30,7 @@ app.use((req,res,next)=> {
 //Middleware for handling errors
 app.use((error,req,res,next)=> {
     if(req.file) {
-        fs.unlink(req.file.path, (err)=> {
-            console.log(err);
-        })
+        fs.unlink(req.file.path, (err)=> err && console.log(err))
     }
     const message = error.message || 'Unknown Error Occured';
     const status = error.statusCode || 500;
