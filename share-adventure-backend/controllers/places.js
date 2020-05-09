@@ -143,18 +143,10 @@ exports.DELETE_PLACE = async (req,res,next)=> {
     } catch(err) {
         return next(new ErrorHandling('Place not deleted', 500));
     }
-    removeImageFromFolder(place.image);
-    res.status(200).json({message: 'Place deleted'});
-}
 
-const removeImageFromFolder = filePath => {
-    filePath = path.join(__dirname,'../', filePath);
-    fs.unlink(filePath, (err)=> {
-        if(err) {
-            console.log(err);
-        } else {
-            console.log("Place deleted");
-            
-        }
+    fs.unlink(place.image, (err) => {
+        err && console.log(err);
+        !err && console.log("Place deleted");
     })
+    res.status(200).json({message: 'Place deleted'});
 }

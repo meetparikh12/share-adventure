@@ -1,6 +1,9 @@
 const ErrorHandling = require('../models/error-handling');
 const { validationResult } = require('express-validator');
 const User = require('../models/user');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 exports.GET_USERS = async (req, res, next) => {
     let users;
@@ -31,18 +34,27 @@ exports.SIGN_UP = async (req,res,next) => {
         return next(new ErrorHandling('Email already exists', 422));
     }   
     const { name, email, password } = req.body;
+    let hashedPassword;
+
+    try {
+        hashedPassword = await bcrypt.hash(password, 10);
+    } catch(err) {
+        return next(new ErrorHandling('Network Error', 500));
+    }
+
     let imagePath = req.file.path;
     imagePath = imagePath.replace(/\\/g, "/");
-    
+
     const userRegister = new User({
-        name, email, password, image: imagePath
+        name, email, password: hashedPassword, image: imagePath
     })
     try{
         await userRegister.save()
     } catch(err) {
+        console.log(err);
         return next(new ErrorHandling('User not signed up!', 500));
     }
-    res.status(201).json({user: userRegister});
+    res.status(201).json({message: 'Registered Successfully'});
 }
 
 exports.LOGIN = async (req,res,next)=> {
@@ -59,10 +71,28 @@ exports.LOGIN = async (req,res,next)=> {
     } catch(err){
         return next(new ErrorHandling('Try again', 500));   
     } 
-
-    if(!userLogin || userLogin.password !== password) {
+    let isPasswordEqual;
+    try {
+        isPasswordEqual = await bcrypt.compare(password, userLogin.password);
+    } catch(err) {
+        return next(new ErrorHandling('Invalid Credentials', 500));   
+    }
+    if(!userLogin || !isPasswordEqual) {
         return next(new ErrorHandling('Invalid credentials', 401));
     }
-    
-    res.status(200).json({user: userLogin});
+    let token;
+    try {
+        token = jwt.sign({
+            userId: userLogin._id,
+            email: userLogin.email
+        }, config.get('secret-key'), {
+            expiresIn: '1h'
+        })
+    } catch(err) {
+        return next(new ErrorHandling('Invalid Credentials', 401));
+    }
+    res.status(200).json({
+        userId: userLogin._id, 
+        email: userLogin.email,
+        token});
 }
