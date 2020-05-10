@@ -2,9 +2,9 @@ import axios from 'axios';
 
 const setJwtToken = token => {
     if(token) {
-        axios.defaults.headers.post['Authorization'] = 'Bearer ' +token;
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' +token;
     } else {
-        delete axios.defaults.headers.post['Authorization'];
+        delete axios.defaults.headers.common['Authorization'];
     }
 }
 
