@@ -75,10 +75,10 @@ exports.LOGIN = async (req,res,next)=> {
     try {
         isPasswordEqual = await bcrypt.compare(password, userLogin.password);
     } catch(err) {
-        return next(new ErrorHandling('Invalid Credentials', 500));   
+        return next(new ErrorHandling('Invalid Credentials', 403));   
     }
     if(!userLogin || !isPasswordEqual) {
-        return next(new ErrorHandling('Invalid credentials', 401));
+        return next(new ErrorHandling('Invalid credentials', 403));
     }
     let token;
     try {
@@ -89,7 +89,7 @@ exports.LOGIN = async (req,res,next)=> {
             expiresIn: '1h'
         })
     } catch(err) {
-        return next(new ErrorHandling('Invalid Credentials', 401));
+        return next(new ErrorHandling('Invalid Credentials', 403));
     }
     res.status(200).json({
         userId: userLogin._id, 

@@ -57,6 +57,10 @@ exports.CREATE_NEW_PLACE = async (req,res,next)=> {
         return next(new ErrorHandling('User not found', 404));
     }
 
+    if (creator !== req.userId) {
+        return next(new ErrorHandling('You are not authorized', 401));
+    }
+
     let imagePath = req.file.path;
     imagePath = imagePath.replace(/\\/g, "/");
     const createdPlace = new Place({
@@ -102,6 +106,9 @@ exports.UPDATE_PLACE = async (req,res,next) => {
         return next(new ErrorHandling('Place not found', 404));
     }
 
+    if(place.creator.toString() !== req.userId) {
+        return next(new ErrorHandling('You are not authorized', 401));
+    }
     const { title, description} = req.body;
     place.title = title;
     place.description = description;
@@ -125,6 +132,10 @@ exports.DELETE_PLACE = async (req,res,next)=> {
     if(!place) {
         return next(new ErrorHandling('Place not found', 404));
     } 
+
+    if (place.creator._id !== req.userId) {
+        return next(new ErrorHandling('You are not authorized', 401));
+    }
 
     try {
         const session = await mongoose.startSession();
