@@ -1,7 +1,6 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const intialState = {
-     isUserLoggedIn: false,
      loginUserInfo: {},
      allUsers : []
 }
@@ -13,8 +12,7 @@ export const userReducer = (state = intialState, action) => {
             
             return {
                 ...state,
-                isUserLoggedIn: action.payload.isUserLoggedIn,
-                loginUserInfo: action.payload.userInfo
+                loginUserInfo: action.payload
             }
         
         case actionTypes.GET_ALL_USERS:

@@ -1,12 +1,10 @@
 import * as actionTypes from './actionTypes';
 
-export const setUserInfo = (isUserLoggedIn, userInfo) => {
+export const setUserInfo = (userInfo) => {
     return {
         type: actionTypes.USER_LOGIN,
-        payload: {
-            isUserLoggedIn,
-            userInfo
-        }
+        payload: userInfo
+        
     }
 }
 export const userCreationError = (error) => {

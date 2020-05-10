@@ -5,38 +5,46 @@ import './NavLinks.css';
 //import { AuthContext } from '../context/Auth-Context';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { setUserInfo } from '../../../actions/actions';
+import store from '../../../store';
+import setJwtToken from '../../../security-utils/setJwtToken';
+import { USER_LOGIN} from '../../../actions/actionTypes';
 
 class NavLinks extends React.Component {
   //  const auth = useContext(AuthContext);
 
     logout(){
-        this.props.setUserInfo(!this.props.isUserLoggedIn, {});
+        localStorage.removeItem("jwtToken");
+        setJwtToken(false);
+        store.dispatch({
+            type: USER_LOGIN,
+            payload: {}
+        });
+        window.location.href = "/";
     }
 
     render(){
-        const { isUserLoggedIn, userInfo } = this.props;
+        const { userInfo } = this.props;
         return (
         <ul className="nav-links">
             <li>
                 <NavLink to="/" exact>ALL USERS</NavLink>
             </li>
-            { isUserLoggedIn &&
+            { userInfo.userId &&
             <li>
                 <NavLink to={`/${userInfo.userId}/places`}>MY PLACES</NavLink>
             </li>
             }
-            { isUserLoggedIn &&
+            { userInfo.userId &&
             <li>
                  <NavLink to="/place/new">NEW PLACE</NavLink>
             </li>
             }
-            { isUserLoggedIn &&
+            { userInfo.userId &&
             <li>
                 <NavLink to="/register" onClick={this.logout.bind(this)}>LOGOUT</NavLink>
             </li>
             }
-            { !isUserLoggedIn && <li>
+            { !userInfo.userId && <li>
                 <NavLink to="/login">AUTHENTICATE</NavLink>
             </li> }
 
@@ -45,21 +53,12 @@ class NavLinks extends React.Component {
     }
 }
 NavLinks.propTypes = {
-    isUserLoggedIn : PropTypes.bool.isRequired
+    userInfo : PropTypes.object.isRequired
 }
 const mapStateToProps = state => {
     return {
-        isUserLoggedIn : state.user.isUserLoggedIn,
         userInfo: state.user.loginUserInfo
     }
 }
 
-const mapDispatchToProps = dispatchEvent => {
-    return {
-        setUserInfo: (isUserLoggedIn) => {
-            dispatchEvent(setUserInfo(isUserLoggedIn, {}));
-            
-        }
-    }
-}
-export default connect(mapStateToProps,mapDispatchToProps)(NavLinks);
+export default connect(mapStateToProps,null)(NavLinks);

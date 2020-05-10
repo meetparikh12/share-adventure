@@ -41,7 +41,7 @@ class Auth extends Component {
                 localStorage.setItem("jwtToken", token);
                 setJwtToken(token);
                 const decodedToken = jwt_decode(token);
-                this.props.setUserInfo(!this.props.isUserLoggedIn,decodedToken,this.props.history);
+                this.props.setUserInfo(decodedToken,this.props.history);
                 toast.success('Logged in Successfully', {
                     position: toast.POSITION.BOTTOM_RIGHT,
                     autoClose: 1000
@@ -81,19 +81,19 @@ class Auth extends Component {
     }
 }
 Auth.propTypes = {
-    isUserLoggedIn: PropTypes.bool.isRequired
+    userInfo: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => {
     return {
-        isUserLoggedIn : state.user.isUserLoggedIn
+        userInfo : state.user.loginUserInfo
     }
 }
 
 const mapDispatchToProps = dispatchEvent => {
     return {
-        setUserInfo: (isUserLoggedIn, userInfo, history) => {
-                dispatchEvent(setUserInfo(isUserLoggedIn, userInfo));
+        setUserInfo: (userInfo, history) => {
+                dispatchEvent(setUserInfo(userInfo));
                 history.push('/');
         }
     }

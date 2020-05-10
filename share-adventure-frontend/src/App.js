@@ -9,6 +9,35 @@ import MainNavigation from './shared/components/Navigation/MainNavigation';
 import UserPlaces from './places/pages/UserPlaces';
 import Auth from './users/pages/Login';
 import Register from './users/pages/Register';
+import { USER_LOGIN } from './actions/actionTypes';
+import jwt_decode from 'jwt-decode';
+import setJwtToken from './security-utils/setJwtToken';
+import store from './store';
+const jwtToken = localStorage.jwtToken;
+
+if(jwtToken){
+  setJwtToken(jwtToken);
+  const decoded_token = jwt_decode(jwtToken);
+  //dispatch to our UserReducer
+  store.dispatch({
+    type: USER_LOGIN,
+    payload: decoded_token
+  });
+
+  const currentTime = Date.now()/1000;
+  console.log(currentTime);
+  console.log(decoded_token.exp);
+  if(decoded_token.exp < currentTime){
+    localStorage.removeItem("jwtToken");
+    setJwtToken(false);
+    store.dispatch({
+      type: USER_LOGIN,
+      payload: {}
+    });
+    window.location.href ="/";
+  }
+}
+
 function App() {
   return (
       <Router>
