@@ -50,7 +50,7 @@ function App() {
               <Route exact path="/login" component={Auth}/>
               <Route exact path="/register" component={Register}/>
               <ProtectedRoute exact path="/place/new" component={NewPlace}/>
-              <Route exact path="/place/:placeId" component={UpdatePlace}/>
+              <ProtectedRoute exact path="/place/:placeId" component={UpdatePlace}/>
               <Route exact path="/:userId/places" component={UserPlaces}/>
               <Redirect to="/"/>
             </Switch>

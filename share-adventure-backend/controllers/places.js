@@ -46,19 +46,15 @@ exports.CREATE_NEW_PLACE = async (req,res,next)=> {
         error.message = error.array()
         return next(error);
     }
-    const { title, description, address, creator } = req.body;
+    const { title, description, address } = req.body;
     let user;
     try {
-         user = await User.findById(creator);
+         user = await User.findById(req.userId);
     } catch(err){
         return next(new ErrorHandling('Try again', 500));
     }
     if(!user) {
         return next(new ErrorHandling('User not found', 404));
-    }
-
-    if (creator !== req.userId) {
-        return next(new ErrorHandling('You are not authorized', 401));
     }
 
     let imagePath = req.file.path;
@@ -67,7 +63,7 @@ exports.CREATE_NEW_PLACE = async (req,res,next)=> {
         title,
         description,
         address,
-        creator,
+        creator: req.userId,
         image: imagePath
     });
 
