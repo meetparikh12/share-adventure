@@ -6,7 +6,7 @@ import './NavLinks.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import store from '../../../store';
-import setJwtToken from '../../../security-utils/setJwtToken';
+import setJwtToken from '../security-utils/setJwtToken';
 import { USER_LOGIN} from '../../../actions/actionTypes';
 
 class NavLinks extends React.Component {
@@ -19,7 +19,6 @@ class NavLinks extends React.Component {
             type: USER_LOGIN,
             payload: {}
         });
-        window.location.href = "/";
     }
 
     render(){

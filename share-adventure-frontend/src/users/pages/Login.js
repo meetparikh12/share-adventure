@@ -7,7 +7,7 @@ import axios from 'axios';
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { trackPromise } from 'react-promise-tracker';
-import setJwtToken from '../../security-utils/setJwtToken';
+import setJwtToken from '../../shared/components/security-utils/setJwtToken';
 import jwt_decode from 'jwt-decode';
 
 toast.configure();

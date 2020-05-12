@@ -11,8 +11,10 @@ import Auth from './users/pages/Login';
 import Register from './users/pages/Register';
 import { USER_LOGIN } from './actions/actionTypes';
 import jwt_decode from 'jwt-decode';
-import setJwtToken from './security-utils/setJwtToken';
+import setJwtToken from './shared/components/security-utils/setJwtToken';
 import store from './store';
+import ProtectedRoute from './shared/components/security-utils/ProtectedRoute';
+
 const jwtToken = localStorage.jwtToken;
 
 if(jwtToken){
@@ -47,7 +49,7 @@ function App() {
               <Route exact path="/" component={Users}/>
               <Route exact path="/login" component={Auth}/>
               <Route exact path="/register" component={Register}/>
-              <Route exact path="/place/new" component={NewPlace}/>
+              <ProtectedRoute exact path="/place/new" component={NewPlace}/>
               <Route exact path="/place/:placeId" component={UpdatePlace}/>
               <Route exact path="/:userId/places" component={UserPlaces}/>
               <Redirect to="/"/>

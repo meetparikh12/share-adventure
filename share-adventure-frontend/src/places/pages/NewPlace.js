@@ -43,7 +43,6 @@ class NewPlace extends React.Component {
         newPlace.set('title', this.state.title)
         newPlace.set('description', this.state.description)
         newPlace.set('address', this.state.address)
-        newPlace.set('creator', this.props.userInfo.userId)
         newPlace.append('image', this.state.placePhoto)
         
         trackPromise(
