@@ -31,7 +31,10 @@ const PlaceItem = props => {
     };
 
   const openMapHandler = () => {
-   alert('Sorry, Map can not be shown.');
+    toast.info('Sorry, Map Service is unavailable right now.', {
+      position: toast.POSITION.BOTTOM_RIGHT,
+      autoClose: 2000
+    })
   }
 
   return (
