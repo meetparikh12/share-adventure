@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { userCreationError} from '../../actions/actions';
 import { trackPromise } from 'react-promise-tracker';
+import PropTypes from 'prop-types';
 
 toast.configure()
 class Register extends Component {
@@ -87,6 +88,9 @@ class Register extends Component {
     }
 }
 
+Register.propTypes = {
+    createNewUser: PropTypes.func.isRequired,
+}
 
 const mapDispatchToProps = dispatchEvent => {
     return {

@@ -6,6 +6,7 @@ import { getAllPlaces } from '../../actions/actions';
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { trackPromise } from 'react-promise-tracker';
+import PropTypes from 'prop-types';
 
 toast.configure();
 class UserPlaces extends React.Component {
@@ -21,6 +22,11 @@ class UserPlaces extends React.Component {
          const { userId } = this.props.match.params;
         return <PlaceList userId = {userId} items={this.props.places} />;
     }
+}
+
+UserPlaces.propTypes = {
+    places: PropTypes.array.isRequired,
+    getAllPlaces: PropTypes.func.isRequired
 }
 const mapStateToProps = state => {
     return {

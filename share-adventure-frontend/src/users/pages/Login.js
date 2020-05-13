@@ -81,7 +81,8 @@ class Auth extends Component {
     }
 }
 Auth.propTypes = {
-    userInfo: PropTypes.object.isRequired
+    userInfo: PropTypes.object.isRequired,
+    setUserInfo: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {

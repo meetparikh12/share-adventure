@@ -1,6 +1,7 @@
 import React from 'react'
 import { Route , Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 function ProtectedRoute({component:Component, userInfo, ...otherProps}) {
     return <Route {...otherProps} render = { (props) => {
@@ -11,6 +12,10 @@ function ProtectedRoute({component:Component, userInfo, ...otherProps}) {
         }
     }}
     />
+}
+
+ProtectedRoute.propTypes = {
+    userInfo: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => {

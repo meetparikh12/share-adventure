@@ -5,6 +5,7 @@ import { connect} from 'react-redux';
 import { getAllUsers} from '../../actions/actions.js';
 import { toast } from 'react-toastify';
 import { trackPromise } from 'react-promise-tracker';
+import PropTypes from 'prop-types';
 
 toast.configure();
 class Users extends React.Component {
@@ -33,6 +34,10 @@ class Users extends React.Component {
     }
 }
 
+Users.propTypes = {
+    users: PropTypes.array.isRequired,
+    getAllUsers: PropTypes.func.isRequired
+}
 
 const mapStateToProps = state => {
    return { users : state.user.allUsers }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PlaceItem from './PlaceItem';
 import Card from '../../shared/components/UIElements/Card';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import './PlaceList.css';
 
@@ -39,6 +40,11 @@ const PlaceList = props => {
     </ul>
   );
 };
+
+PlaceList.propTypes = {
+  userInfo: PropTypes.object.isRequired,
+}
+
 const mapStateToProps = state => {
   return {
     userInfo: state.user.loginUserInfo

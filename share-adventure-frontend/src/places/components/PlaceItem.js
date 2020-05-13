@@ -59,7 +59,8 @@ const PlaceItem = props => {
 };
 
 PlaceItem.propTypes = {
-  userInfo: PropTypes.object.isRequired
+  userInfo: PropTypes.object.isRequired,
+  deletePlace: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {

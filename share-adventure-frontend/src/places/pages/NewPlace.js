@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { trackPromise } from 'react-promise-tracker';
+import PropTypes from 'prop-types';
 
 toast.configure();
 class NewPlace extends React.Component {
@@ -69,7 +70,7 @@ class NewPlace extends React.Component {
         return (
            <div className="add-PBI">
                 <div className="container">
-                    <div className="row">
+                  <div className="row">
                         <div className="col-md-8 m-auto">
                             {/* <a href="#" className="btn btn-light">
                                 Back to Project Board
@@ -102,6 +103,11 @@ class NewPlace extends React.Component {
         )
     };
 }
+
+NewPlace.propTypes = {
+    userInfo: PropTypes.object.isRequired,
+}
+
 const mapStateToProps = state => {
     return {
         userInfo: state.user.loginUserInfo

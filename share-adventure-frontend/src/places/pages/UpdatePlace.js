@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { connect } from 'react-redux';
 import { trackPromise } from 'react-promise-tracker';
+import PropTypes from 'prop-types';
 
 toast.configure();
 
@@ -83,7 +84,7 @@ class UpdatePlace extends React.Component {
                                 <div className="form-group">
                                     <textarea required className="form-control form-control-lg"  onChange = {this.formChangeHandler} value={this.state.description} placeholder="Place Description" name="description"></textarea>
                                 </div>
-                                <input type="submit" className="btn btn-danger btn-block mt-4" />
+                                <input type="submit" value="Update Details" className="btn btn-danger btn-block mt-4" />
                             </form>
                         </div>
                     </div>
@@ -92,6 +93,10 @@ class UpdatePlace extends React.Component {
 
         )
     };
+}
+
+UpdatePlace.propTypes = {
+    userInfo: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => {
