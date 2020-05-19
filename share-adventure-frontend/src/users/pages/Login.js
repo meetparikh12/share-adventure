@@ -17,7 +17,8 @@ class Auth extends Component {
         super(props);
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            isBtnDisabled: false
         }
         this.formSubmitHandler = this.formSubmitHandler.bind(this);
         this.formChangeHandler = this.formChangeHandler.bind(this);
@@ -34,6 +35,9 @@ class Auth extends Component {
             email: this.state.email,
             password: this.state.password
         }
+        this.setState({
+            isBtnDisabled: !this.state.isBtnDisabled
+        })
         trackPromise(
         axios.post('http://localhost:5000/api/users/login', loginUser)
             .then((res) => {
@@ -52,6 +56,9 @@ class Auth extends Component {
                     position: toast.POSITION.BOTTOM_RIGHT,
                     autoClose: 1000
                 });
+                this.setState({
+                    isBtnDisabled: !this.state.isBtnDisabled
+                })
             }));
             
         }
@@ -70,8 +77,8 @@ class Auth extends Component {
                                 <div className="form-group">
                                     <input type="password" required className="form-control form-control-lg" onChange={this.formChangeHandler} value={this.state.password} placeholder="Password" name="password" />
                                 </div>
-                                <input type="submit" value="Login" className="btn btn-danger btn-block mt-4" />
-                                <Link to="/register" style={{"textDecoration": "none"}}><button type="button"  className="btn btn-outline-danger btn-block mt-4">Sign up</button></Link>
+                                <input type="submit" disabled={this.state.isBtnDisabled} value="Login" className="btn btn-danger btn-block mt-4" />
+                                <Link to="/register" style={{"textDecoration": "none"}}><button disabled={this.state.isBtnDisabled} type="button"  className="btn btn-outline-danger btn-block mt-4">Sign up</button></Link>
                             </form>
                         </div>
                     </div>

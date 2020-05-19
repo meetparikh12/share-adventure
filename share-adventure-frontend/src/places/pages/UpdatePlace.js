@@ -13,11 +13,11 @@ toast.configure();
 class UpdatePlace extends React.Component {
     constructor(props) {
         super(props);
-        this.fileInput = React.createRef();
         this.state = {
             title : '',
             description: '',
-            placeId : props.match.params.placeId
+            placeId : props.match.params.placeId,
+            isBtnDisabled: false
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);  
         this.formSubmitHandler = this.formSubmitHandler.bind(this);
@@ -34,8 +34,11 @@ class UpdatePlace extends React.Component {
         const placeData = {
             title: this.state.title,
             description: this.state.description,
-         //   image: `${this.fileInput.current.files[0].name}`,
         }
+        this.setState({
+            isBtnDisabled: !this.state.isBtnDisabled
+        })
+
         trackPromise(
         axios.patch(`http://localhost:5000/api/places/${this.state.placeId}`, placeData)
         .then((res)=> {
@@ -48,6 +51,10 @@ class UpdatePlace extends React.Component {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 1000
             });
+             this.setState({
+                 isBtnDisabled: !this.state.isBtnDisabled
+             })
+
         }));
     }
 
@@ -84,7 +91,7 @@ class UpdatePlace extends React.Component {
                                 <div className="form-group">
                                     <textarea required className="form-control form-control-lg"  onChange = {this.formChangeHandler} value={this.state.description} placeholder="Place Description" name="description"></textarea>
                                 </div>
-                                <input type="submit" value="Update Details" className="btn btn-danger btn-block mt-4" />
+                                <input type="submit" disabled={this.state.isBtnDisabled} value="Update Details" className="btn btn-danger btn-block mt-4" />
                             </form>
                         </div>
                     </div>

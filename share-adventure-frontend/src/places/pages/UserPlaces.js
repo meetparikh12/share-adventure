@@ -10,13 +10,10 @@ import PropTypes from 'prop-types';
 
 toast.configure();
 class UserPlaces extends React.Component {
-    // const userId = useParams().userId;
-    // const loadedPlaces = USER_PLACES.filter((place)=> place.creator === userId);
-
+    
     componentDidMount(){
         const { userId } = this.props.match.params;
         this.props.getAllPlaces(userId);
-       // console.log(userId);
     }
     render(){
          const { userId } = this.props.match.params;

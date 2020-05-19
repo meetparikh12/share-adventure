@@ -12,7 +12,6 @@ toast.configure();
 class NewPlace extends React.Component {
     constructor(props) {
         super(props);
-       // this.fileInput = React.createRef();
         this.state = {
             title : '',
             description: '',
@@ -20,7 +19,8 @@ class NewPlace extends React.Component {
             address:'',
             creator:'',
             id:'',
-            placePhoto: null
+            placePhoto: null,
+            isBtnDisabled: false
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);  
         this.formSubmitHandler = this.formSubmitHandler.bind(this);
@@ -45,24 +45,26 @@ class NewPlace extends React.Component {
         newPlace.set('description', this.state.description)
         newPlace.set('address', this.state.address)
         newPlace.append('image', this.state.placePhoto)
-        
+        this.setState({
+            isBtnDisabled: !this.state.isBtnDisabled
+        })
         trackPromise(
         axios.post('http://localhost:5000/api/places', newPlace)
         .then((res)=> {
-            console.log(res.data);
             toast.success('Place Added!', {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 1000
             });
-            console.log(res.data.place.creator);
-           this.props.history.push('/')
+            this.props.history.push('/')
         })
         .catch((err)=> {
-            console.log(err.response.data);
             toast.error(err.response.data.message[0].msg || err.response.data.message, {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 1000
             });
+            this.setState({
+                isBtnDisabled: !this.state.isBtnDisabled
+            })
         }));
     }
 
@@ -93,7 +95,7 @@ class NewPlace extends React.Component {
                                 {/* <div>
                                     <img src="data:image/jpeg;base64,"
                                 </div> */}
-                                <input type="submit" value="Add New Place" className="btn btn-danger btn-block mt-4" />
+                                <input type="submit" disabled={this.state.isBtnDisabled} value="Add New Place" className="btn btn-danger btn-block mt-4" />
                             </form>
                         </div>
                     </div>

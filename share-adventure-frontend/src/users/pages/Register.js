@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
-import {connect} from 'react-redux';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { userCreationError} from '../../actions/actions';
 import { trackPromise } from 'react-promise-tracker';
-import PropTypes from 'prop-types';
 
 toast.configure()
 class Register extends Component {
@@ -17,7 +14,8 @@ class Register extends Component {
             name: '',
             email: '',
             password: '',
-            profilePhoto: null
+            profilePhoto: null,
+            isBtnDisabled: false
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.formSubmitHandler = this.formSubmitHandler.bind(this);
@@ -38,15 +36,33 @@ class Register extends Component {
 
     formSubmitHandler(event){
         event.preventDefault();  
-
+        this.setState({
+            isBtnDisabled: !this.state.isBtnDisabled
+        })
         const newUser = new FormData();
         newUser.set('name', this.state.name)
         newUser.set('email', this.state.email)
         newUser.set('password', this.state.password)
         newUser.append('image', this.state.profilePhoto)
 
-        this.props.createNewUser(newUser,this.props.history);
-        
+        trackPromise(
+        axios.post('http://localhost:5000/api/users/signup', newUser)
+        .then((res) => {
+            this.props.history.push('/login');
+            toast.success('Registered Successfully', {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000
+            });
+        })
+        .catch((err) => {
+            toast.error(err.response.data.message[0].msg || err.response.data.message, {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 2000
+            });
+            this.setState({
+                isBtnDisabled: !this.state.isBtnDisabled
+            })
+        }));
     }
 
     render() {
@@ -75,8 +91,8 @@ class Register extends Component {
                                     <input type="password" className="form-control form-control-lg" required onChange={this.formChangeHandler} value={this.state.password} placeholder="Password" name="password" />
                                 </div>
 
-                                <input type="submit" value="Sign up" className="btn btn-danger btn-block mt-4" />
-                                <Link to="/login" style={{"textDecoration": "none"}}><button type="button"  className="btn btn-outline-danger btn-block mt-4">Login</button></Link>
+                                <input type="submit" disabled={this.state.isBtnDisabled} value="Sign up" className="btn btn-danger btn-block mt-4" />
+                                <Link to="/login" style={{"textDecoration": "none"}}><button disabled={this.state.isBtnDisabled} type="button"  className="btn btn-outline-danger btn-block mt-4">Login</button></Link>
                              
                             </form>
                         </div>
@@ -88,31 +104,4 @@ class Register extends Component {
     }
 }
 
-Register.propTypes = {
-    createNewUser: PropTypes.func.isRequired,
-}
-
-const mapDispatchToProps = dispatchEvent => {
-    return {
-        createNewUser : (user,history) => {
-            trackPromise(
-            axios.post('http://localhost:5000/api/users/signup', user)
-                .then((res) => {
-                    history.push('/login');
-                    toast.success('Registered Successfully', {
-                        position: toast.POSITION.BOTTOM_RIGHT,
-                        autoClose: 1000
-                    });
-                    dispatchEvent(userCreationError([]));
-                })
-                .catch((err) => {
-                    toast.error(err.response.data.message[0].msg || err.response.data.message, {
-                        position: toast.POSITION.BOTTOM_RIGHT,
-                        autoClose: 1000
-                    });
-                    dispatchEvent(userCreationError(err.response.data.message))
-                }));
-        }
-    }
-}
-export default connect(null,mapDispatchToProps)(Register);
+export default Register;
