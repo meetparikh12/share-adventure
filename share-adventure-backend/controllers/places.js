@@ -130,8 +130,6 @@ exports.DELETE_PLACE = async (req,res,next)=> {
     } 
 
     if (place.creator._id.toString() !== req.userId) {
-        console.log(place.creator);
-        console.log("not");
         return next(new ErrorHandling('You are not authorized', 401));
     }
 

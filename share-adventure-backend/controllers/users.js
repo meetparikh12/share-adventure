@@ -51,7 +51,6 @@ exports.SIGN_UP = async (req,res,next) => {
     try{
         await userRegister.save()
     } catch(err) {
-        console.log(err);
         return next(new ErrorHandling('User not signed up!', 500));
     }
     res.status(201).json({message: 'Registered Successfully'});
