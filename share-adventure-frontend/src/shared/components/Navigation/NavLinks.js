@@ -1,8 +1,6 @@
 import React from 'react' ;
-//{useContext} from 'react'
 import { NavLink } from 'react-router-dom';
 import './NavLinks.css';
-//import { AuthContext } from '../context/Auth-Context';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import store from '../../../store';
@@ -10,8 +8,6 @@ import setJwtToken from '../security-utils/setJwtToken';
 import { USER_LOGIN} from '../../../actions/actionTypes';
 
 class NavLinks extends React.Component {
-  //  const auth = useContext(AuthContext);
-
     logout(){
         localStorage.removeItem("jwtToken");
         setJwtToken(false);

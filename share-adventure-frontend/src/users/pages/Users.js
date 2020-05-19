@@ -6,19 +6,18 @@ import { getAllUsers} from '../../actions/actions.js';
 import { toast } from 'react-toastify';
 import { trackPromise } from 'react-promise-tracker';
 import PropTypes from 'prop-types';
+import config from 'react-global-configuration';
 
 toast.configure();
 class Users extends React.Component {
 
     componentDidMount(){
         trackPromise(
-        axios.get('http://localhost:5000/api/users')
+        axios.get(`${config.get('backend_url')}/users`)
         .then((res)=> {
-            console.log(res.data.users);
             this.props.getAllUsers(res.data.users);
          })
         .catch((err)=>{
-            console.log(err.response.data);
             toast.error(err.response.data.message, {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 1000

@@ -8,6 +8,7 @@ import { deletePlace } from '../../actions/actions';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { trackPromise } from 'react-promise-tracker';
+import config from 'react-global-configuration';
 
 const PlaceItem = props => {
     const [isBtnDisabled, btnDisabledHandler] = useState(false);
@@ -16,7 +17,7 @@ const PlaceItem = props => {
       if(window.confirm('Do you want to delete this place? Please note that it cannot be undone.')) {
         btnDisabledHandler(true);
         trackPromise(  
-        axios.delete(`http://localhost:5000/api/places/${placeId}`)
+        axios.delete(`${config.get('backend_url')}/places/${placeId}`)
           .then((res) => {
               props.deletePlace(placeId);
               toast.success(res.data.message, {
@@ -44,7 +45,7 @@ const PlaceItem = props => {
       <li className="place-item">
         <Card className="place-item__content">
           <div className="place-item__image">
-            <img src={`http://localhost:5000/${props.image}`} alt={props.title} />
+            <img src={`${config.get('asset_url')}/${props.image}`} alt={props.title} />
           </div>
           <div className="place-item__info">
             <h2>{props.title}</h2>

@@ -4,6 +4,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { trackPromise } from 'react-promise-tracker';
+import config from 'react-global-configuration';
+import Card from '../../shared/components/UIElements/Card';
 
 toast.configure()
 class Register extends Component {
@@ -46,7 +48,7 @@ class Register extends Component {
         newUser.append('image', this.state.profilePhoto)
 
         trackPromise(
-        axios.post('http://localhost:5000/api/users/signup', newUser)
+        axios.post(`${config.get('backend_url')}/users/signup`, newUser)
         .then((res) => {
             this.props.history.push('/login');
             toast.success('Registered Successfully', {
@@ -70,6 +72,7 @@ class Register extends Component {
 
             <div className="register">
                 <div className="container">
+                <Card>
                     <div className="row">
                         <div className="col-md-8 m-auto">
                             <h1 className="display-4 text-center">Sign Up</h1>
@@ -97,6 +100,7 @@ class Register extends Component {
                             </form>
                         </div>
                     </div>
+                </Card>
                 </div>
             </div>
 

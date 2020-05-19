@@ -1,5 +1,4 @@
 import React from 'react';
-//{useState, useCallback} from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route,Switch, Redirect} from 'react-router-dom';
 import Users from './users/pages/Users';
@@ -20,15 +19,12 @@ const jwtToken = localStorage.jwtToken;
 if(jwtToken){
   setJwtToken(jwtToken);
   const decoded_token = jwt_decode(jwtToken);
-  //dispatch to our UserReducer
   store.dispatch({
     type: USER_LOGIN,
     payload: decoded_token
   });
 
   const currentTime = Date.now()/1000;
-  console.log(currentTime);
-  console.log(decoded_token.exp);
   if(decoded_token.exp < currentTime){
     localStorage.removeItem("jwtToken");
     setJwtToken(false);

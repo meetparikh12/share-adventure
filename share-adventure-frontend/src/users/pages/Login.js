@@ -9,6 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { trackPromise } from 'react-promise-tracker';
 import setJwtToken from '../../shared/components/security-utils/setJwtToken';
 import jwt_decode from 'jwt-decode';
+import config from 'react-global-configuration';
+import Card from '../../shared/components/UIElements/Card';
 
 toast.configure();
 
@@ -39,7 +41,7 @@ class Auth extends Component {
             isBtnDisabled: !this.state.isBtnDisabled
         })
         trackPromise(
-        axios.post('http://localhost:5000/api/users/login', loginUser)
+        axios.post(`${config.get('backend_url')}/users/login`, loginUser)
             .then((res) => {
                 const { token } = res.data;
                 localStorage.setItem("jwtToken", token);
@@ -67,6 +69,7 @@ class Auth extends Component {
         return (
             <div className="login">
                 <div className="container">
+                <Card>
                     <div className="row">
                         <div className="col-md-8 m-auto">
                             <h1 className="display-4 text-center">Log In</h1>
@@ -82,6 +85,7 @@ class Auth extends Component {
                             </form>
                         </div>
                     </div>
+                </Card>
                 </div>
             </div>
         )

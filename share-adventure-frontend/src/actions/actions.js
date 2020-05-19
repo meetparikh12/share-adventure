@@ -7,12 +7,6 @@ export const setUserInfo = (userInfo) => {
         
     }
 }
-export const userCreationError = (error) => {
-    return {
-        type: actionTypes.USER_CREATION_ERROR,
-        payload: error
-    }
-}
 
 export const getAllUsers = (users) => {
     return {

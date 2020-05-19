@@ -7,6 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { connect } from 'react-redux';
 import { trackPromise } from 'react-promise-tracker';
 import PropTypes from 'prop-types';
+import config from 'react-global-configuration';
+import Card from '../../shared/components/UIElements/Card';
 
 toast.configure();
 
@@ -40,13 +42,11 @@ class UpdatePlace extends React.Component {
         })
 
         trackPromise(
-        axios.patch(`http://localhost:5000/api/places/${this.state.placeId}`, placeData)
+        axios.patch(`${config.get('backend_url')}/places/${this.state.placeId}`, placeData)
         .then((res)=> {
-            console.log(res.data.place);
             this.props.history.push(`/${this.props.userInfo.userId}/places`)
         })
         .catch((err)=> {
-            console.log(err.response.data);
             toast.error(err.response.data.message[0].msg || err.response.data.message, {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 1000
@@ -61,7 +61,7 @@ class UpdatePlace extends React.Component {
     componentDidMount(){
         const {placeId} = this.props.match.params;
         trackPromise(
-        axios.get(`http://localhost:5000/api/places/${placeId}`)
+        axios.get(`${config.get('backend_url')}/places/${placeId}`)
         .then((res)=> {
             const { title, description } = res.data.place;
             this.setState({
@@ -78,11 +78,9 @@ class UpdatePlace extends React.Component {
         return (
            <div className="add-PBI">
                 <div className="container">
+                <Card>
                     <div className="row">
                         <div className="col-md-8 m-auto">
-                            {/* <a href="#" className="btn btn-light">
-                                Back to Project Board
-                            </a> */}
                             <h4 className="display-4 text-center">Update Place</h4>
                             <form onSubmit={this.formSubmitHandler}>
                                 <div className="form-group">
@@ -95,6 +93,7 @@ class UpdatePlace extends React.Component {
                             </form>
                         </div>
                     </div>
+                </Card>
                 </div>
             </div>
 

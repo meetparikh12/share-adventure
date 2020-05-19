@@ -7,6 +7,8 @@ import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { trackPromise } from 'react-promise-tracker';
 import PropTypes from 'prop-types';
+import config from 'react-global-configuration';
+import Card from '../../shared/components/UIElements/Card';
 
 toast.configure();
 class NewPlace extends React.Component {
@@ -49,7 +51,7 @@ class NewPlace extends React.Component {
             isBtnDisabled: !this.state.isBtnDisabled
         })
         trackPromise(
-        axios.post('http://localhost:5000/api/places', newPlace)
+        axios.post(`${config.get('backend_url')}/places`, newPlace)
         .then((res)=> {
             toast.success('Place Added!', {
                 position: toast.POSITION.BOTTOM_RIGHT,
@@ -72,11 +74,9 @@ class NewPlace extends React.Component {
         return (
            <div className="add-PBI">
                 <div className="container">
+                <Card>
                   <div className="row">
                         <div className="col-md-8 m-auto">
-                            {/* <a href="#" className="btn btn-light">
-                                Back to Project Board
-                            </a> */}
                             <h4 className="display-4 text-center">Add New Place</h4>
                             <form onSubmit={this.formSubmitHandler}>
                                 <div className="form-group">
@@ -92,13 +92,11 @@ class NewPlace extends React.Component {
                                 <div className="form-group">
                                     <input required type="file" accept='.jpg,.png,.jpeg' placeholder = "Upload Photos" onChange={this.fileSelectedHandler} className="form-control form-control-lg" name="image" />
                                 </div>
-                                {/* <div>
-                                    <img src="data:image/jpeg;base64,"
-                                </div> */}
                                 <input type="submit" disabled={this.state.isBtnDisabled} value="Add New Place" className="btn btn-danger btn-block mt-4" />
                             </form>
                         </div>
                     </div>
+                </Card>
                 </div>
             </div>
 
