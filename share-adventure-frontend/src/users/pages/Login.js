@@ -71,7 +71,7 @@ class Auth extends Component {
                                     <input type="password" required className="form-control form-control-lg" onChange={this.formChangeHandler} value={this.state.password} placeholder="Password" name="password" />
                                 </div>
                                 <input type="submit" value="Login" className="btn btn-danger btn-block mt-4" />
-                                <Link to="/register"><button type="button"  className="btn btn-outline-danger btn-block mt-4">Sign up</button></Link>
+                                <Link to="/register" style={{"textDecoration": "none"}}><button type="button"  className="btn btn-outline-danger btn-block mt-4">Sign up</button></Link>
                             </form>
                         </div>
                     </div>

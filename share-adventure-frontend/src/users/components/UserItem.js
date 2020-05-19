@@ -9,7 +9,7 @@ const UserItem = props => {
   return (
     <li className="user-item">
       <Card className="user-item__content">
-        <Link to={`/${props.id}/places`}>
+        <Link to={`/${props.id}/places`} style={{"textDecoration": "none"}}>
           <div className="user-item__image">
             <Avatar image={`http://localhost:5000/${props.image}`} alt={props.name} />
           </div>

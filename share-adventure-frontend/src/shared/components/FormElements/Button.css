@@ -19,6 +19,8 @@
 .button:active {
     background: #ff4382;
     border-color: #ff4382;
+    text-decoration: none;
+    color: white;
 }
 
 .button--inverse {

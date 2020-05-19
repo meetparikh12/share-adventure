@@ -76,7 +76,7 @@ class Register extends Component {
                                 </div>
 
                                 <input type="submit" value="Sign up" className="btn btn-danger btn-block mt-4" />
-                                <Link to="/login"><button type="button"  className="btn btn-outline-danger btn-block mt-4">Login</button></Link>
+                                <Link to="/login" style={{"textDecoration": "none"}}><button type="button"  className="btn btn-outline-danger btn-block mt-4">Login</button></Link>
                              
                             </form>
                         </div>
