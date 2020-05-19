@@ -3,7 +3,7 @@ const { validationResult } = require('express-validator');
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const config = require('config');
+const {secretKey} = require('../config/keys');
 
 exports.GET_USERS = async (req, res, next) => {
     let users;
@@ -85,7 +85,7 @@ exports.LOGIN = async (req,res,next)=> {
         token = jwt.sign({
             userId: userLogin._id,
             email: userLogin.email
-        }, config.get('secret-key'), {
+        }, secretKey, {
             expiresIn: '1h'
         })
     } catch(err) {

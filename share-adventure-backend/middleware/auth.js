@@ -1,6 +1,7 @@
-const config = require('config')
+const {secretKey} = require('../config/keys');
 const jwt = require('jsonwebtoken');
 const ErroHandling = require('../models/error-handling');
+
 module.exports = (req,res,next)=> {
     const header = req.get('Authorization');
     if(!header) {
@@ -8,7 +9,7 @@ module.exports = (req,res,next)=> {
     }
     const token = header.split(' ')[1];
     try {
-        decodedToken = jwt.verify(token,config.get('secret-key'));
+        decodedToken = jwt.verify(token,secretKey);
     } catch (err) {
         return next(new ErroHandling('Not Authorized', 401))
     } 
